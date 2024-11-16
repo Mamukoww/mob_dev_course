@@ -1,5 +1,6 @@
 package com.example.mob_dev_course
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var button1: Button
     private lateinit var button2: Button
     private lateinit var button3: Button
+    private lateinit var profileButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         button1 = findViewById(R.id.bottom_button_1)
         button2 = findViewById(R.id.bottom_button_2)
         button3 = findViewById(R.id.bottom_button_3)
+        profileButton = findViewById(R.id.profile_button)
 
         // Установка начального фрагмента
         if (savedInstanceState == null) {
@@ -32,11 +35,21 @@ class MainActivity : AppCompatActivity() {
         button1.setOnClickListener { replaceFragment(Fragment1()) }
         button2.setOnClickListener { replaceFragment(Fragment2()) }
         button3.setOnClickListener { replaceFragment(Fragment3()) }
+
+        // Переход в TopMenuActivity для открытия Profile
+        profileButton.setOnClickListener {
+            openProfileInTopMenuActivity()
+        }
     }
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_container, fragment)
             .commit()
+    }
+
+    private fun openProfileInTopMenuActivity() {
+        val intent = Intent(this, TopMenuActivity::class.java)
+        startActivity(intent)
     }
 }
