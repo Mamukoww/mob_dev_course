@@ -5,8 +5,8 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.mob_dev_course.fragments.Fragment1
-import com.example.mob_dev_course.fragments.Fragment2
+import com.example.mob_dev_course.fragments.MainMenuFragment
+import com.example.mob_dev_course.fragments.PlannedFragment
 import com.example.mob_dev_course.fragments.Fragment3
 
 class MainActivity : AppCompatActivity() {
@@ -28,12 +28,12 @@ class MainActivity : AppCompatActivity() {
 
         // Установка начального фрагмента
         if (savedInstanceState == null) {
-            replaceFragment(Fragment1())
+            replaceFragment(MainMenuFragment())
         }
 
         // Обработчики нажатий
-        button1.setOnClickListener { replaceFragment(Fragment1()) }
-        button2.setOnClickListener { replaceFragment(Fragment2()) }
+        button1.setOnClickListener { replaceFragment(MainMenuFragment()) }
+        button2.setOnClickListener { replaceFragment(PlannedFragment()) }
         button3.setOnClickListener { replaceFragment(Fragment3()) }
 
         // Переход на TopMenuActivity

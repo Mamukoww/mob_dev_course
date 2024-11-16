@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    android:padding="16dp">
+
+    <!-- Недельный календарь -->
+    <LinearLayout
+        android:id="@+id/week_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:background="#D3D3D3"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/day_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Пн\n1"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/day_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Вт\n2"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/day_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Ср\n3"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/day_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Чт\n4"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/day_5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Пт\n5"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/day_6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Сб\n6"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/day_7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Вс\n7"
+            android:textColor="#000000"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Список расписания -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/scheduleRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="16dp" />
+</LinearLayout>
