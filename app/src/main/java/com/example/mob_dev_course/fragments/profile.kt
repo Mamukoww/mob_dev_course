@@ -12,7 +12,8 @@ class Profile : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
+    ): View? {
+        // Подключение макета profile_settings.xml
         return inflater.inflate(R.layout.profile_settings, container, false)
     }
 }
