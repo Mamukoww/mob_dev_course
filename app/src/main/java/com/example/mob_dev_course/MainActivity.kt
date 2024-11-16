@@ -1,5 +1,6 @@
 package com.example.mob_dev_course
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -7,7 +8,6 @@ import androidx.fragment.app.Fragment
 import com.example.mob_dev_course.fragments.Fragment1
 import com.example.mob_dev_course.fragments.Fragment2
 import com.example.mob_dev_course.fragments.Fragment3
-import com.example.mob_dev_course.fragments.Profile
 
 class MainActivity : AppCompatActivity() {
 
@@ -36,16 +36,17 @@ class MainActivity : AppCompatActivity() {
         button2.setOnClickListener { replaceFragment(Fragment2()) }
         button3.setOnClickListener { replaceFragment(Fragment3()) }
 
-        // Переход на настройки профиля
+        // Переход на TopMenuActivity
         profileButton.setOnClickListener {
-            replaceFragment(Profile())
+            val intent = Intent(this, TopMenuActivity::class.java)
+            startActivity(intent)
         }
     }
 
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_container, fragment)
-            .addToBackStack(null) // Добавление в стек возврата
+            .addToBackStack(null)
             .commit()
     }
 }
