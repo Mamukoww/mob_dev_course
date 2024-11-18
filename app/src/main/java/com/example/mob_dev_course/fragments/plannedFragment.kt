@@ -5,20 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mob_dev_course.R
 import com.example.mob_dev_course.adapters.ScheduleAdapter
+import com.example.mob_dev_course.widgets.SwipeableCalendarLayout
 import java.util.*
-
 
 class PlannedFragment : Fragment() {
 
     private lateinit var scheduleRecyclerView: RecyclerView
     private lateinit var scheduleAdapter: ScheduleAdapter
+    private lateinit var calendarContainer: SwipeableCalendarLayout // Кастомный контейнер календаря
     private val scheduleData: MutableMap<Int, List<ScheduleAdapter.ScheduleItem>> = mutableMapOf()
+    private val calendar = Calendar.getInstance()
+    private var selectedDayIndex: Int = 0 // Хранит выбранный день недели (0 = Пн, ..., 6 = Вс)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,8 +28,11 @@ class PlannedFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.planned, container, false)
 
-        // Инициализация RecyclerView
+        // Найти RecyclerView и контейнер календаря
         scheduleRecyclerView = view.findViewById(R.id.scheduleRecyclerView)
+        calendarContainer = view.findViewById(R.id.week_calendar)
+
+        // Инициализация RecyclerView
         scheduleAdapter = ScheduleAdapter(emptyList())
         scheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         scheduleRecyclerView.adapter = scheduleAdapter
@@ -35,7 +40,32 @@ class PlannedFragment : Fragment() {
         // Заполнение тестовых данных
         populateTestSchedule()
 
-        // Найти элементы для дней недели
+        // Инициализация календаря
+        initializeCalendar(view)
+
+        // Обработка свайпов через SwipeableCalendarLayout
+        calendarContainer.setSwipeListener(object : SwipeableCalendarLayout.SwipeListener {
+            override fun onSwipeLeft() {
+                calendar.add(Calendar.WEEK_OF_YEAR, 1) // Следующая неделя
+                updateWeek(view)
+            }
+
+            override fun onSwipeRight() {
+                calendar.add(Calendar.WEEK_OF_YEAR, -1) // Предыдущая неделя
+                updateWeek(view)
+            }
+        })
+
+        return view
+    }
+
+    // Инициализация календаря
+    private fun initializeCalendar(view: View) {
+        updateWeek(view)
+    }
+
+    // Обновление текущей недели
+    private fun updateWeek(view: View) {
         val days = listOf(
             view.findViewById<TextView>(R.id.day_1),
             view.findViewById<TextView>(R.id.day_2),
@@ -46,68 +76,64 @@ class PlannedFragment : Fragment() {
             view.findViewById<TextView>(R.id.day_7)
         )
 
-        // Получить текущую дату
-        val calendar = Calendar.getInstance()
-        val today = calendar.get(Calendar.DAY_OF_MONTH)
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+        // Установить дату понедельника текущей недели
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
 
-        // Android: Воскресенье = 1, Понедельник = 2 и т.д.
-        val startOfWeek = calendar.apply {
-            add(Calendar.DAY_OF_MONTH, -(dayOfWeek - Calendar.MONDAY))
-        }
-
-        // Установить текст для каждого дня недели
         for (i in days.indices) {
-            val dayInMonth = startOfWeek.get(Calendar.DAY_OF_MONTH)
+            val dayInMonth = calendar.get(Calendar.DAY_OF_MONTH)
             days[i].text = "${getDayName(i)}\n$dayInMonth"
+
+            // Сбросить выделение для всех дней
+            resetDayHighlight(days[i])
 
             // Установить обработчик нажатия
             days[i].setOnClickListener {
-                onDaySelected(i, dayInMonth, days)
+                onDaySelected(i, days)
             }
 
-            // Если это текущий день, выделяем его
-            if (dayInMonth == today) {
-                highlightDay(days[i])
-                updateScheduleForDay(i) // Обновить расписание для текущего дня
-            }
-
-            // Переход к следующему дню
-            startOfWeek.add(Calendar.DAY_OF_MONTH, 1)
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        return view
+        // Вернуться к началу текущей недели
+        calendar.add(Calendar.DAY_OF_MONTH, -7)
+
+        // Выделить ранее выбранный день недели
+        highlightDay(days[selectedDayIndex])
+
+        // Обновить расписание для выбранного дня
+        updateScheduleForDay(selectedDayIndex)
     }
 
     // Обработка выбора дня
-    // Обработка выбора дня
-    private fun onDaySelected(dayIndex: Int, dayInMonth: Int, days: List<TextView>) {
+    private fun onDaySelected(dayIndex: Int, days: List<TextView>) {
         // Снять выделение со всех дней
         days.forEach { resetDayHighlight(it) }
 
         // Выделить выбранный день
         highlightDay(days[dayIndex])
 
-        // Обновить список расписания
+        // Обновить выбранный день
+        selectedDayIndex = dayIndex
+
+        // Обновить расписание для выбранного дня
         updateScheduleForDay(dayIndex)
     }
 
-
     // Выделить день
     private fun highlightDay(dayView: TextView) {
-        dayView.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue))
+        dayView.setTextColor(resources.getColor(R.color.blue, null))
         dayView.setTypeface(null, android.graphics.Typeface.BOLD)
     }
 
     // Сбросить выделение дня
     private fun resetDayHighlight(dayView: TextView) {
-        dayView.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+        dayView.setTextColor(resources.getColor(R.color.black, null))
         dayView.setTypeface(null, android.graphics.Typeface.NORMAL)
     }
 
-    // Обновить расписание для выбранного дня
+    // Обновление расписания для выбранного дня
     private fun updateScheduleForDay(dayIndex: Int) {
-        val newSchedule = scheduleData[dayIndex] ?: emptyList() // Получить данные для дня или пустой список
+        val newSchedule = scheduleData[dayIndex] ?: emptyList()
         scheduleAdapter.updateData(newSchedule)
     }
 
@@ -117,38 +143,16 @@ class PlannedFragment : Fragment() {
             ScheduleAdapter.ScheduleItem("9:00", "Лекарство A", "Принять перед едой"),
             ScheduleAdapter.ScheduleItem("12:00", "Лекарство B", "Принять после еды")
         )
-
         scheduleData[1] = listOf(
             ScheduleAdapter.ScheduleItem("10:00", "Лекарство C", "Принять с водой")
         )
-
         scheduleData[2] = listOf(
             ScheduleAdapter.ScheduleItem("8:00", "Лекарство D", "Принять натощак"),
             ScheduleAdapter.ScheduleItem("18:00", "Лекарство E", "Принять после ужина")
         )
-
-        scheduleData[3] = listOf(
-            ScheduleAdapter.ScheduleItem("9:30", "Лекарство F", "Принять перед прогулкой")
-        )
-
-        scheduleData[4] = listOf(
-            ScheduleAdapter.ScheduleItem("11:00", "Лекарство G", "Принять после завтрака"),
-            ScheduleAdapter.ScheduleItem("15:00", "Лекарство H", "Принять с чаем")
-        )
-
-        scheduleData[5] = listOf(
-            ScheduleAdapter.ScheduleItem("10:00", "Лекарство I", "Принять перед сном")
-        )
-
-        scheduleData[6] = listOf(
-            ScheduleAdapter.ScheduleItem("8:30", "Лекарство J", "Принять с фруктами")
-        )
     }
 
-
-
-
-    // Метод для получения названия дня недели
+    // Получение названия дня недели
     private fun getDayName(index: Int): String {
         return when (index) {
             0 -> "Пн"
