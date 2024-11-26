@@ -12,7 +12,6 @@ class NotificationsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Подключение макета для уведомлений
         return inflater.inflate(R.layout.notifications, container, false)
     }
 }

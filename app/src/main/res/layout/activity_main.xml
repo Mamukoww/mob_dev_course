@@ -34,7 +34,6 @@
             android:textColor="#000000"
             android:textSize="18sp" />
 
-        <!-- Кнопка уведомлений -->
         <Button
             android:id="@+id/notification_button"
             android:layout_width="40dp"
@@ -44,7 +43,6 @@
             android:layout_marginStart="8dp"
             android:layout_gravity="center_vertical" />
 
-        <!-- Кнопка добавления -->
         <Button
             android:id="@+id/add_button"
             android:layout_width="40dp"

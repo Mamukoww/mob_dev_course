@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- Clear Button -->
     <Button
         android:id="@+id/clearButton"
         android:layout_width="match_parent"

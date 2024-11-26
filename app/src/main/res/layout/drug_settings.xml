@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="#FFFFFF">
 
-    <!-- Кнопка "Добавить в расписание" -->
     <Button
         android:id="@+id/clearButton"
         android:layout_width="match_parent"
@@ -17,7 +16,6 @@
         android:backgroundTint="#008080"
         android:textColor="#FFFFFF" />
 
-    <!-- Кнопка "Сохранить" -->
     <Button
         android:id="@+id/saveButton"
         android:layout_width="match_parent"

@@ -15,40 +15,43 @@ class MainActivity : AppCompatActivity() {
     private lateinit var button2: Button
     private lateinit var button3: Button
     private lateinit var profileButton: Button
-    private lateinit var notificationButton: Button // Кнопка уведомлений
+    private lateinit var notificationButton: Button
+    private lateinit var addButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Инициализация кнопок
         button1 = findViewById(R.id.bottom_button_1)
         button2 = findViewById(R.id.bottom_button_2)
         button3 = findViewById(R.id.bottom_button_3)
         profileButton = findViewById(R.id.profile_button)
-        notificationButton = findViewById(R.id.notification_button) // Инициализация кнопки уведомлений
+        notificationButton = findViewById(R.id.notification_button)
+        addButton = findViewById(R.id.add_button)
 
-        // Установка начального фрагмента
         if (savedInstanceState == null) {
             replaceFragment(MainMenuFragment())
         }
 
-        // Обработчики нажатий
         button1.setOnClickListener { replaceFragment(MainMenuFragment()) }
         button2.setOnClickListener { replaceFragment(PlannedFragment()) }
         button3.setOnClickListener { replaceFragment(Fragment3()) }
 
-        // Переход на TopMenuActivity для профиля
         profileButton.setOnClickListener {
             val intent = Intent(this, TopMenuActivity::class.java)
-            intent.putExtra("fragment", "profile") // Отправка флага, чтобы открыть фрагмент Profile
+            intent.putExtra("fragment", "profile")
             startActivity(intent)
         }
 
-        // Переход на TopMenuActivity для уведомлений
         notificationButton.setOnClickListener {
             val intent = Intent(this, TopMenuActivity::class.java)
-            intent.putExtra("fragment", "notifications") // Отправка флага, чтобы открыть фрагмент Notifications
+            intent.putExtra("fragment", "notifications")
+            startActivity(intent)
+        }
+
+        addButton.setOnClickListener {
+            val intent = Intent(this, TopMenuActivity::class.java)
+            intent.putExtra("fragment", "drug_settings")
             startActivity(intent)
         }
     }
@@ -56,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.content_container, fragment)
-            .addToBackStack(null) // Сохранение состояния в стеке назад
+            .addToBackStack(null)
             .commit()
     }
 }
