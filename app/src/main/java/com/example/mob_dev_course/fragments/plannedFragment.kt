@@ -62,6 +62,7 @@ class PlannedFragment : Fragment() {
     // Инициализация календаря
     private fun initializeCalendar(view: View) {
         updateWeek(view)
+        highlightToday(view)
     }
 
     // Обновление текущей недели
@@ -103,6 +104,43 @@ class PlannedFragment : Fragment() {
         // Обновить расписание для выбранного дня
         updateScheduleForDay(selectedDayIndex)
     }
+
+    // Метод для выделения сегодняшнего дня
+    private fun highlightToday(view: View) {
+        val today = Calendar.getInstance()
+        val days = listOf(
+            view.findViewById<TextView>(R.id.day_1),
+            view.findViewById<TextView>(R.id.day_2),
+            view.findViewById<TextView>(R.id.day_3),
+            view.findViewById<TextView>(R.id.day_4),
+            view.findViewById<TextView>(R.id.day_5),
+            view.findViewById<TextView>(R.id.day_6),
+            view.findViewById<TextView>(R.id.day_7)
+        )
+
+        // Установить дату понедельника текущей недели
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
+
+        // Сначала сбрасываем выделение со всех дней
+        days.forEach { resetDayHighlight(it) }
+
+        // Проверяем каждый день недели
+        for (i in days.indices) {
+            val dayInMonth = calendar.get(Calendar.DAY_OF_MONTH)
+            if (today.get(Calendar.DAY_OF_MONTH) == dayInMonth &&
+                today.get(Calendar.MONTH) == calendar.get(Calendar.MONTH) &&
+                today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
+            ) {
+                // Выделяем сегодняшний день
+                highlightDay(days[i])
+                selectedDayIndex = i
+                updateScheduleForDay(selectedDayIndex)
+                break
+            }
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+    }
+
 
     // Обработка выбора дня
     private fun onDaySelected(dayIndex: Int, days: List<TextView>) {
