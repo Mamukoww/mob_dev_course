@@ -2,33 +2,53 @@ package com.example.mob_dev_course
 
 import android.os.Bundle
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import com.example.mob_dev_course.R
 import com.example.mob_dev_course.fragments.Profile
+import com.example.mob_dev_course.fragments.NotificationsFragment
+import com.example.mob_dev_course.fragments.DrugSettingsFragment
 
 class TopMenuActivity : AppCompatActivity() {
 
     private lateinit var backButton: ImageView
+    private lateinit var topMenuTitle: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_topmenu)
 
-        // Инициализация кнопки "Назад"
         backButton = findViewById(R.id.back_button)
+        topMenuTitle = findViewById(R.id.top_menu_title)
 
-        // Установка слушателя нажатия на кнопку "Назад"
         backButton.setOnClickListener {
-            onBackPressed() // Возвращаемся на предыдущую активность
+            onBackPressed()
         }
 
-        // Всегда открывать фрагмент Profile при запуске
-        replaceFragment(Profile())
+        val fragmentToOpen = intent.getStringExtra("fragment")
+
+        when (fragmentToOpen) {
+            "notifications" -> {
+                topMenuTitle.text = "Уведомления"
+                replaceFragment(NotificationsFragment())
+            }
+            "profile" -> {
+                topMenuTitle.text = "Профиль"
+                replaceFragment(Profile())
+            }
+            "drug_settings" -> {
+                topMenuTitle.text = "Препарат"
+                replaceFragment(DrugSettingsFragment())
+            }
+            else -> {
+                topMenuTitle.text = "Профиль"
+                replaceFragment(Profile())
+            }
+        }
     }
 
     private fun replaceFragment(fragment: androidx.fragment.app.Fragment) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.content_container, fragment) // Контейнер из activity_topmenu.xml
+            .replace(R.id.content_container, fragment)
             .commit()
     }
 }

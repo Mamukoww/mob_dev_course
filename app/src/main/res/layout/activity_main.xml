@@ -34,19 +34,23 @@
             android:textColor="#000000"
             android:textSize="18sp" />
 
-        <ImageView
-            android:id="@+id/notification_icon"
+        <Button
+            android:id="@+id/notification_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/notification_mainmenu"
-            android:contentDescription="Notification Icon" />
+            android:background="@drawable/notification_mainmenu"
+            android:contentDescription="Notification Button"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical" />
 
-        <ImageView
+        <Button
             android:id="@+id/add_button"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/plus_mainmenu"
-            android:contentDescription="Add Button" />
+            android:background="@drawable/plus_mainmenu"
+            android:contentDescription="Add Button"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical" />
     </LinearLayout>
 
     <FrameLayout
@@ -116,6 +120,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
-
     </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

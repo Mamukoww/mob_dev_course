@@ -6,7 +6,6 @@
     android:gravity="center_horizontal"
     android:padding="16dp">
 
-    <!-- Логотип -->
     <ImageView
         android:id="@+id/logoImage"
         android:layout_width="120dp"
@@ -16,7 +15,6 @@
         android:layout_marginBottom="32dp"
         android:scaleType="centerInside" />
 
-    <!-- Заголовок -->
     <TextView
         android:id="@+id/registrationTitle"
         android:layout_width="wrap_content"
@@ -27,7 +25,6 @@
         android:layout_marginBottom="32dp"
         android:gravity="center" />
 
-    <!-- Поле ввода для почты -->
     <EditText
         android:id="@+id/emailField"
         android:layout_width="match_parent"
@@ -36,7 +33,6 @@
         android:layout_marginBottom="16dp"
         android:layout_marginHorizontal="48dp" />
 
-    <!-- Поле ввода для пароля -->
     <EditText
         android:id="@+id/passwordField"
         android:layout_width="match_parent"
@@ -46,7 +42,6 @@
         android:layout_marginBottom="48dp"
         android:layout_marginHorizontal="48dp" />
 
-    <!-- Кнопка "Регистрация" -->
     <Button
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
