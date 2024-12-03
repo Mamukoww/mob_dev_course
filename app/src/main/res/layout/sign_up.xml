@@ -39,6 +39,15 @@
         android:layout_height="wrap_content"
         android:hint="Пароль"
         android:inputType="textPassword"
+        android:layout_marginBottom="16dp"
+        android:layout_marginHorizontal="48dp" />
+
+    <EditText
+        android:id="@+id/confirmPasswordField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Подтвердите пароль"
+        android:inputType="textPassword"
         android:layout_marginBottom="48dp"
         android:layout_marginHorizontal="48dp" />
 

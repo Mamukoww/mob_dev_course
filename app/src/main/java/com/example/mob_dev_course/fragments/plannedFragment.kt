@@ -33,7 +33,7 @@ class PlannedFragment : Fragment() {
         calendarContainer = view.findViewById(R.id.week_calendar)
 
         // Инициализация RecyclerView
-        scheduleAdapter = ScheduleAdapter(emptyList())
+        scheduleAdapter = ScheduleAdapter(emptyList(), childFragmentManager)
         scheduleRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         scheduleRecyclerView.adapter = scheduleAdapter
 

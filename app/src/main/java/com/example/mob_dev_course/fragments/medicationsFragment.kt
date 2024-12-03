@@ -29,8 +29,8 @@ class Fragment3 : Fragment() {
         inactiveMedsRecyclerView = view.findViewById(R.id.inactiveMedsRecyclerView)
 
         // Инициализация адаптеров
-        currentMedsAdapter = MedicationsAdapter(emptyList())
-        inactiveMedsAdapter = MedicationsAdapter(emptyList())
+        currentMedsAdapter = MedicationsAdapter(emptyList(), childFragmentManager)
+        inactiveMedsAdapter = MedicationsAdapter(emptyList(), childFragmentManager)
 
         // Установить адаптеры и менеджеры компоновки
         currentMedsRecyclerView.layoutManager = LinearLayoutManager(requireContext())

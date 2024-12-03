@@ -6,7 +6,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mob_dev_course.fragments.Profile
 import com.example.mob_dev_course.fragments.NotificationsFragment
-import com.example.mob_dev_course.fragments.DrugSettingsFragment
+import com.example.mob_dev_course.fragments.DrugSettingTimeFragment
+import com.example.mob_dev_course.fragments.DetailedPlan
 
 class TopMenuActivity : AppCompatActivity() {
 
@@ -35,9 +36,13 @@ class TopMenuActivity : AppCompatActivity() {
                 topMenuTitle.text = "Профиль"
                 replaceFragment(Profile())
             }
+            "detailed_plan" -> {
+                topMenuTitle.text = "Подробнее"
+                replaceFragment(DetailedPlan())
+            }
             "drug_settings" -> {
                 topMenuTitle.text = "Препарат"
-                replaceFragment(DrugSettingsFragment())
+                replaceFragment(DrugSettingTimeFragment())
             }
             else -> {
                 topMenuTitle.text = "Профиль"
