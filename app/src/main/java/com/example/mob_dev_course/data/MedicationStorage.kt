@@ -1,6 +1,7 @@
 package com.example.mob_dev_course.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*
@@ -23,8 +24,8 @@ data class Medication(
 )
 
 class MedicationStorage(context: Context) {
-    private val sharedPreferences = context.getSharedPreferences("medications_prefs", Context.MODE_PRIVATE)
-    private val gson = Gson()
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("medications_prefs", Context.MODE_PRIVATE)
+    private val gson: Gson = Gson()
 
     companion object {
         private const val KEY_MEDICATIONS = "medications"
