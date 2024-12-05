@@ -7,136 +7,160 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.mob_dev_course.R
-import com.example.mob_dev_course.data.MedicationsRepository
-import com.example.mob_dev_course.models.Medication
+import com.example.mob_dev_course.data.Medication
+import com.example.mob_dev_course.data.MedicationStorage
+import com.example.mob_dev_course.data.TimeSchedule
+import java.util.*
 
 class DrugSettingsFragment : Fragment() {
+    private lateinit var medicationStorage: MedicationStorage
     private lateinit var nameInput: EditText
     private lateinit var typeSpinner: Spinner
+    private lateinit var commentInput: EditText
     private lateinit var frequencySpinner: Spinner
     private lateinit var timesPerDaySpinner: Spinner
-    private lateinit var commentInput: EditText
     private lateinit var saveButton: Button
-    private lateinit var addToScheduleButton: Button
     private lateinit var timeButtonsContainer: LinearLayout
-    private val selectedTimes = mutableListOf<String>()
+    
+    private val timeSchedules = mutableListOf<TimeSchedule>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.drug_settings, container, false)
+        return inflater.inflate(R.layout.drug_settings, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        medicationStorage = MedicationStorage(requireContext())
 
         // Инициализация views
         nameInput = view.findViewById(R.id.et_name)
         typeSpinner = view.findViewById(R.id.spinner_type)
+        commentInput = view.findViewById(R.id.et_comment)
         frequencySpinner = view.findViewById(R.id.spinner_frequency)
         timesPerDaySpinner = view.findViewById(R.id.spinner_times_per_day)
-        commentInput = view.findViewById(R.id.et_comment)
         saveButton = view.findViewById(R.id.btn_save)
-        addToScheduleButton = view.findViewById(R.id.btn_add_to_schedule)
         timeButtonsContainer = view.findViewById(R.id.time_buttons_container)
 
         // Настройка спиннеров
         setupSpinners()
 
+        // Обработчик изменения количества приемов
         timesPerDaySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val times = position + 1 // Assuming spinner values start from 1
-                createButtons(times)
+                val times = (position + 1)
+                updateTimeButtons(times)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
+        // Обработчик кнопки сохранения
         saveButton.setOnClickListener {
             saveMedication()
         }
-
-        addToScheduleButton.setOnClickListener {
-            // TODO: Добавить в расписание
-            Toast.makeText(context, "Функция будет добавлена позже", Toast.LENGTH_SHORT).show()
-        }
-
-        return view
     }
 
     private fun setupSpinners() {
-        // Типы лекарств
-        val types = arrayOf("Таблетки", "Капсулы", "Сироп", "Капли", "Другое")
-        val typeAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, types)
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        typeSpinner.adapter = typeAdapter
+        // Типы медикаментов
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.medication_types,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            typeSpinner.adapter = adapter
+        }
 
         // Частота приема
-        val frequencies = arrayOf("Ежедневно", "По дням недели", "По необходимости")
-        val frequencyAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, frequencies)
-        frequencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        frequencySpinner.adapter = frequencyAdapter
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.frequency_options,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            frequencySpinner.adapter = adapter
+        }
 
-        // Количество раз в день
-        val timesPerDay = Array(5) { (it + 1).toString() }
-        val timesAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timesPerDay)
-        timesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        timesPerDaySpinner.adapter = timesAdapter
+        // Количество приемов в день
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.times_per_day,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            timesPerDaySpinner.adapter = adapter
+        }
     }
 
-    private fun createButtons(count: Int) {
+    private fun updateTimeButtons(count: Int) {
         timeButtonsContainer.removeAllViews()
-        selectedTimes.clear()
+        timeSchedules.clear()
 
         for (i in 1..count) {
             val button = Button(context).apply {
-                text = "Установить время для дозы $i"
+                text = "Выбрать время приема $i"
                 setOnClickListener {
-                    openTimePicker(i - 1, this)
+                    showTimePickerDialog(i - 1)
                 }
             }
             timeButtonsContainer.addView(button)
         }
     }
 
-    private fun openTimePicker(index: Int, button: Button) {
-        val fragment = DrugSettingTimeFragment()
-        fragment.show(childFragmentManager, "timePicker")
-
-        fragment.setOnTimeSelectedListener { time ->
-            if (selectedTimes.size > index) {
-                selectedTimes[index] = time
-            } else {
-                selectedTimes.add(time)
+    private fun showTimePickerDialog(index: Int) {
+        val timePickerFragment = DrugSettingTimeFragment().apply {
+            setOnTimeSelectedListener { time ->
+                val parts = time.split(":")
+                val timeSchedule = TimeSchedule(parts[0].toInt(), parts[1].toInt())
+                if (index < timeSchedules.size) {
+                    timeSchedules[index] = timeSchedule
+                } else {
+                    timeSchedules.add(timeSchedule)
+                }
+                updateButtonText(index, parts[0].toInt(), parts[1].toInt())
             }
-            button.text = time
         }
+        timePickerFragment.show(childFragmentManager, "timePicker")
+    }
+
+    private fun updateButtonText(index: Int, hour: Int, minute: Int) {
+        val button = timeButtonsContainer.getChildAt(index) as Button
+        button.text = String.format("Прием %d: %02d:%02d", index + 1, hour, minute)
     }
 
     private fun saveMedication() {
         val name = nameInput.text.toString()
         val type = typeSpinner.selectedItem.toString()
-        val frequency = frequencySpinner.selectedItem.toString()
-        val timesPerDay = timesPerDaySpinner.selectedItem.toString()
         val comment = commentInput.text.toString()
+        val frequency = frequencySpinner.selectedItem.toString()
+        val timesPerDay = (timesPerDaySpinner.selectedItem.toString()).toIntOrNull() ?: 1
 
-        if (name.isEmpty()) {
-            Toast.makeText(context, "Пожалуйста, введите название препарата", Toast.LENGTH_SHORT).show()
+        if (name.isBlank()) {
+            Toast.makeText(context, "Введите название медикамента", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (timeSchedules.size != timesPerDay) {
+            Toast.makeText(context, "Пожалуйста, установите время для всех приемов", Toast.LENGTH_SHORT).show()
             return
         }
 
         val medication = Medication(
             name = name,
-            dosage = type,
+            type = type,
+            comment = comment,
             frequency = frequency,
-            time = selectedTimes.joinToString(", "),
-            startDate = "",
-            endDate = "",
-            notes = comment
+            timesPerDay = timesPerDay,
+            schedules = timeSchedules.toList()
         )
 
-        MedicationsRepository.addMedication(medication)
-        Toast.makeText(context, "Лекарство успешно добавлено", Toast.LENGTH_SHORT).show()
-
-        // Возврат к предыдущему экрану
+        medicationStorage.saveMedication(medication)
+        Toast.makeText(context, "Медикамент сохранен", Toast.LENGTH_SHORT).show()
         activity?.onBackPressed()
     }
 }

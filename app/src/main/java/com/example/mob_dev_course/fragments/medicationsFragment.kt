@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mob_dev_course.R
 import com.example.mob_dev_course.adapters.MedicationsAdapter
 import com.example.mob_dev_course.adapters.MedicationItem
+import com.example.mob_dev_course.data.MedicationStorage
 
 class Fragment3 : Fragment() {
 
@@ -17,12 +18,15 @@ class Fragment3 : Fragment() {
     private lateinit var inactiveMedsRecyclerView: RecyclerView
     private lateinit var currentMedsAdapter: MedicationsAdapter
     private lateinit var inactiveMedsAdapter: MedicationsAdapter
+    private lateinit var medicationStorage: MedicationStorage
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.medications, container, false)
+
+        medicationStorage = MedicationStorage(requireContext())
 
         // Найти RecyclerView
         currentMedsRecyclerView = view.findViewById(R.id.currentMedsRecyclerView)
@@ -39,23 +43,25 @@ class Fragment3 : Fragment() {
         inactiveMedsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         inactiveMedsRecyclerView.adapter = inactiveMedsAdapter
 
-        // Заполнить тестовыми данными
-        populateTestData()
-
         return view
     }
 
-    private fun populateTestData() {
-        val currentMeds = listOf(
-            MedicationItem("Лекарство A", "Описание текущего лекарства"),
-            MedicationItem("Лекарство B", "Описание текущего лекарства")
-        )
-        val inactiveMeds = listOf(
-            MedicationItem("Лекарство C", "Описание неактивного лекарства"),
-            MedicationItem("Лекарство D", "Описание неактивного лекарства")
-        )
+    override fun onResume() {
+        super.onResume()
+        updateMedicationLists()
+    }
 
-        currentMedsAdapter.updateData(currentMeds)
+    private fun updateMedicationLists() {
+        // Получаем активные медикаменты
+        val activeMeds = medicationStorage.getActiveMedications().map {
+            MedicationItem(it.name, "${it.comment}")
+        }
+        currentMedsAdapter.updateData(activeMeds)
+
+        // Получаем неактивные медикаменты
+        val inactiveMeds = medicationStorage.getInactiveMedications().map {
+            MedicationItem(it.name, "${it.comment}")
+        }
         inactiveMedsAdapter.updateData(inactiveMeds)
     }
 }
