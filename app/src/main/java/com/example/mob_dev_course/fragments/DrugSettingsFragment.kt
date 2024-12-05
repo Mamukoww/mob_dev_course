@@ -18,6 +18,8 @@ class DrugSettingsFragment : Fragment() {
     private lateinit var commentInput: EditText
     private lateinit var saveButton: Button
     private lateinit var addToScheduleButton: Button
+    private lateinit var timeButtonsContainer: LinearLayout
+    private val selectedTimes = mutableListOf<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,9 +36,19 @@ class DrugSettingsFragment : Fragment() {
         commentInput = view.findViewById(R.id.et_comment)
         saveButton = view.findViewById(R.id.btn_save)
         addToScheduleButton = view.findViewById(R.id.btn_add_to_schedule)
+        timeButtonsContainer = view.findViewById(R.id.time_buttons_container)
 
         // Настройка спиннеров
         setupSpinners()
+
+        timesPerDaySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val times = position + 1 // Assuming spinner values start from 1
+                createButtons(times)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         saveButton.setOnClickListener {
             saveMedication()
@@ -64,10 +76,39 @@ class DrugSettingsFragment : Fragment() {
         frequencySpinner.adapter = frequencyAdapter
 
         // Количество раз в день
-        val timesPerDay = Array(10) { (it + 1).toString() }
+        val timesPerDay = Array(5) { (it + 1).toString() }
         val timesAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timesPerDay)
         timesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         timesPerDaySpinner.adapter = timesAdapter
+    }
+
+    private fun createButtons(count: Int) {
+        timeButtonsContainer.removeAllViews()
+        selectedTimes.clear()
+
+        for (i in 1..count) {
+            val button = Button(context).apply {
+                text = "Установить время для дозы $i"
+                setOnClickListener {
+                    openTimePicker(i - 1, this)
+                }
+            }
+            timeButtonsContainer.addView(button)
+        }
+    }
+
+    private fun openTimePicker(index: Int, button: Button) {
+        val fragment = DrugSettingTimeFragment()
+        fragment.show(childFragmentManager, "timePicker")
+
+        fragment.setOnTimeSelectedListener { time ->
+            if (selectedTimes.size > index) {
+                selectedTimes[index] = time
+            } else {
+                selectedTimes.add(time)
+            }
+            button.text = time
+        }
     }
 
     private fun saveMedication() {
@@ -86,7 +127,7 @@ class DrugSettingsFragment : Fragment() {
             name = name,
             dosage = type,
             frequency = frequency,
-            time = timesPerDay,
+            time = selectedTimes.joinToString(", "),
             startDate = "",
             endDate = "",
             notes = comment
@@ -94,7 +135,7 @@ class DrugSettingsFragment : Fragment() {
 
         MedicationsRepository.addMedication(medication)
         Toast.makeText(context, "Лекарство успешно добавлено", Toast.LENGTH_SHORT).show()
-        
+
         // Возврат к предыдущему экрану
         activity?.onBackPressed()
     }

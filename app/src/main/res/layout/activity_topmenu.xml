@@ -34,13 +34,6 @@
             android:text="Профиль"
             android:textColor="#000000"
             android:textSize="18sp" />
-
-        <ImageView
-            android:id="@+id/plus_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@android:drawable/ic_input_add"
-            android:contentDescription="Add Button" />
     </LinearLayout>
 
     <FrameLayout
