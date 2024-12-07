@@ -58,4 +58,15 @@ object ScheduleStorage {
         val json = gson.toJson(scheduleList)
         prefs.edit().putString(SCHEDULE_KEY, json).apply()
     }
+
+    fun updateScheduleStatus(scheduleId: String, newStatus: MedicationStatus) {
+        val scheduleList = getAllSchedules().toMutableList()
+        val index = scheduleList.indexOfFirst { it.id == scheduleId }
+        if (index != -1) {
+            val updatedSchedule = scheduleList[index].copy(status = newStatus)
+            scheduleList[index] = updatedSchedule
+            val json = gson.toJson(scheduleList)
+            prefs.edit().putString(SCHEDULE_KEY, json).apply()
+        }
+    }
 }

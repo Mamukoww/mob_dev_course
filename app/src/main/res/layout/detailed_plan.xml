@@ -19,7 +19,7 @@
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
-            android:src="@drawable/plus_mainmenu"
+            android:src="@drawable/logo"
             android:layout_marginBottom="8dp"/>
 
         <TextView

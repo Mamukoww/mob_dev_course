@@ -221,6 +221,13 @@ class DrugSettingsFragment : Fragment() {
             return
         }
 
+        // Проверяем, существует ли уже препарат с таким названием
+        val medicationStorage = MedicationStorage(requireContext())
+        if (medicationStorage.getMedicationByName(name) != null) {
+            Toast.makeText(context, "Препарат с таким названием уже существует", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         if (timeSchedules.size != timesPerDay) {
             Toast.makeText(context, "Пожалуйста, установите время для всех приемов", Toast.LENGTH_SHORT).show()
             return
@@ -236,7 +243,7 @@ class DrugSettingsFragment : Fragment() {
         )
 
         savedMedicationId = medication.id // Сохраняем ID лекарства
-        MedicationStorage(requireContext()).saveMedication(medication)
+        medicationStorage.saveMedication(medication)
         Toast.makeText(context, "Медикамент сохранен", Toast.LENGTH_SHORT).show()
     }
 

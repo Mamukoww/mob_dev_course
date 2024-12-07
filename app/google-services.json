@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "773095306076",
+    "project_id": "mob-dev-kurs",
+    "storage_bucket": "mob-dev-kurs.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773095306076:android:e03f44fa63644b8d1fc799",
+        "android_client_info": {
+          "package_name": "com.example.mob_dev_course"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0D52X0lVD2TmuN0-pmL5XIqbItrOCFtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

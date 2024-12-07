@@ -10,9 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mob_dev_course.R
 import com.example.mob_dev_course.adapters.ScheduleAdapter
+import com.example.mob_dev_course.adapters.ScheduleItem
 import com.example.mob_dev_course.widgets.SwipeableCalendarLayout
 import com.example.mob_dev_course.data.ScheduleStorage
 import com.example.mob_dev_course.data.ScheduleData
+import com.example.mob_dev_course.data.MedicationStatus
 import java.util.*
 
 class PlannedFragment : Fragment() {
@@ -101,76 +103,76 @@ class PlannedFragment : Fragment() {
         }
     }
 
-    private fun highlightToday(view: View) {
-        val today = Calendar.getInstance()
-        val days = listOf(
-            view.findViewById<TextView>(R.id.day_1),
-            view.findViewById<TextView>(R.id.day_2),
-            view.findViewById<TextView>(R.id.day_3),
-            view.findViewById<TextView>(R.id.day_4),
-            view.findViewById<TextView>(R.id.day_5),
-            view.findViewById<TextView>(R.id.day_6),
-            view.findViewById<TextView>(R.id.day_7)
-        )
-
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
-        days.forEach { unhighlightDay(it) }
-
-        for (i in days.indices) {
-            if (today.get(Calendar.DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH) &&
-                today.get(Calendar.MONTH) == calendar.get(Calendar.MONTH) &&
-                today.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)
-            ) {
-                highlightDay(days[i])
-                selectedDate = calendar.timeInMillis
-                loadScheduleForSelectedDate()
-                break
-            }
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
-        }
-    }
-
     private fun onDateSelected(date: Long, days: List<TextView>) {
+        selectedDate = date
         days.forEach { unhighlightDay(it) }
-        
         val selectedCalendar = Calendar.getInstance().apply { timeInMillis = date }
         val dayIndex = (selectedCalendar.get(Calendar.DAY_OF_WEEK) + 5) % 7
         highlightDay(days[dayIndex])
-        
-        selectedDate = date
         loadScheduleForSelectedDate()
     }
 
-    private fun highlightDay(dayView: TextView) {
-        dayView.setBackgroundResource(R.drawable.selected_day_background)
-    }
-
-    private fun unhighlightDay(dayView: TextView) {
-        dayView.setBackgroundResource(0)
-    }
-
-    private fun loadScheduleForSelectedDate() {
-        val scheduleItems = ScheduleStorage.getScheduleForDate(selectedDate).map { scheduleData ->
-            ScheduleAdapter.ScheduleItem(
-                time = scheduleData.time,
-                title = scheduleData.medicationName,
-                description = scheduleData.description
-            )
-        }.sortedBy { it.time }
+    private fun highlightToday(view: View) {
+        val today = Calendar.getInstance()
+        val weekStart = calendar.clone() as Calendar
+        weekStart.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY)
         
-        scheduleAdapter.updateData(scheduleItems)
+        if (today.get(Calendar.WEEK_OF_YEAR) == weekStart.get(Calendar.WEEK_OF_YEAR) &&
+            today.get(Calendar.YEAR) == weekStart.get(Calendar.YEAR)) {
+            val dayIndex = (today.get(Calendar.DAY_OF_WEEK) + 5) % 7
+            val dayView = when (dayIndex) {
+                0 -> view.findViewById<TextView>(R.id.day_1)
+                1 -> view.findViewById<TextView>(R.id.day_2)
+                2 -> view.findViewById<TextView>(R.id.day_3)
+                3 -> view.findViewById<TextView>(R.id.day_4)
+                4 -> view.findViewById<TextView>(R.id.day_5)
+                5 -> view.findViewById<TextView>(R.id.day_6)
+                else -> view.findViewById<TextView>(R.id.day_7)
+            }
+            highlightDay(dayView)
+        }
+    }
+
+    private fun highlightDay(textView: TextView) {
+        textView.setBackgroundResource(R.drawable.selected_day_background)
+    }
+
+    private fun unhighlightDay(textView: TextView) {
+        textView.setBackgroundResource(0)
     }
 
     private fun getDayName(index: Int): String {
         return when (index) {
-            0 -> "Пн"
-            1 -> "Вт"
-            2 -> "Ср"
-            3 -> "Чт"
-            4 -> "Пт"
-            5 -> "Сб"
-            6 -> "Вс"
-            else -> ""
+            0 -> "ПН"
+            1 -> "ВТ"
+            2 -> "СР"
+            3 -> "ЧТ"
+            4 -> "ПТ"
+            5 -> "СБ"
+            else -> "ВС"
         }
+    }
+
+    private fun loadScheduleForSelectedDate() {
+        val schedules = ScheduleStorage.getScheduleForDate(selectedDate)
+        val scheduleItems = schedules.map { schedule ->
+            // Разбираем строку времени на часы и минуты
+            val timeParts = schedule.time.split(":")
+            val timeFormatted = if (timeParts.size == 2) {
+                schedule.time // Используем как есть, если уже в нужном формате
+            } else {
+                String.format("%02d:%02d", 0, 0) // Значение по умолчанию, если формат неверный
+            }
+            
+            ScheduleItem(
+                id = schedule.id,
+                time = timeFormatted,
+                title = schedule.medicationName,
+                description = schedule.description,
+                status = schedule.status
+            )
+        }.sortedBy { it.time }
+
+        scheduleAdapter.updateData(scheduleItems)
     }
 }
