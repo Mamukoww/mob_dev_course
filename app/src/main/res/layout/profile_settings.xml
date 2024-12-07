@@ -75,41 +75,44 @@
                 android:layout_width="80dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="#E0E0E0"
+                android:background="@drawable/gender_button_selector"
                 android:text="М"
                 android:textSize="18sp"
-                android:textColor="#000000" />
+                android:textColor="@color/gender_text_selector" />
 
             <Button
                 android:id="@+id/female_button"
                 android:layout_width="80dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="#E0E0E0"
+                android:background="@drawable/gender_button_selector"
                 android:text="Ж"
                 android:textSize="18sp"
-                android:textColor="#000000" />
+                android:textColor="@color/gender_text_selector" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/birth_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ДД.ММ.ГГГГ"
+            android:hint="Дата рождения"
             android:padding="12dp"
             android:background="#E0E0E0"
-            android:inputType="date"
+            android:focusable="false"
+            android:clickable="true"
+            android:inputType="none"
             android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="#D3D3D3"
             android:text="Сохранить"
-            android:textColor="#000000"
+            android:textSize="16sp"
+            android:backgroundTint="#673AB7"
+            android:textColor="#FFFFFF"
             android:padding="12dp"
             android:layout_marginTop="16dp" />
+
     </LinearLayout>
 </ScrollView>
