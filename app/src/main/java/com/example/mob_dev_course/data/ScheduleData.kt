@@ -2,6 +2,7 @@ package com.example.mob_dev_course.data
 
 data class ScheduleData(
     val id: String = java.util.UUID.randomUUID().toString(),
+    val medicationId: String, // ID лекарства
     val medicationName: String,
     val time: String,
     val description: String,

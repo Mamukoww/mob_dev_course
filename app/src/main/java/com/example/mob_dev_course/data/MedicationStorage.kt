@@ -80,4 +80,14 @@ class MedicationStorage(context: Context) {
             saveMedicationList(medications)
         }
     }
+
+    fun deleteMedication(medicationId: String) {
+        val medications = getMedications().toMutableList()
+        medications.removeAll { it.id == medicationId }
+        saveMedicationList(medications)
+    }
+
+    fun getMedicationByName(name: String): Medication? {
+        return getMedications().find { it.name == name }
+    }
 }

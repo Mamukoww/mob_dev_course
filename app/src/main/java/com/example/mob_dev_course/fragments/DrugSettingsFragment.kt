@@ -38,6 +38,7 @@ class DrugSettingsFragment : Fragment() {
     private var endDate: Calendar? = null
     private val timeSchedules = mutableListOf<TimeSchedule>()
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private var savedMedicationId: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -234,9 +235,9 @@ class DrugSettingsFragment : Fragment() {
             schedules = timeSchedules.toList()
         )
 
+        savedMedicationId = medication.id // Сохраняем ID лекарства
         MedicationStorage(requireContext()).saveMedication(medication)
         Toast.makeText(context, "Медикамент сохранен", Toast.LENGTH_SHORT).show()
-        navigateToSchedule()
     }
 
     private fun setupAddToScheduleButton() {
@@ -248,6 +249,12 @@ class DrugSettingsFragment : Fragment() {
             
             // Сначала сохраняем препарат в medications
             saveMedication()
+            
+            // Проверяем, что у нас есть ID лекарства
+            if (savedMedicationId == null) {
+                Toast.makeText(context, "Ошибка сохранения лекарства", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             
             // Затем добавляем в расписание
             when (frequencySpinner.selectedItemPosition) {
@@ -277,6 +284,7 @@ class DrugSettingsFragment : Fragment() {
         while (!currentDate.after(endDate)) {
             times.forEach { time ->
                 val scheduleData = ScheduleData(
+                    medicationId = savedMedicationId!!,
                     medicationName = medicationName,
                     time = time,
                     description = commentInput.text.toString(),
@@ -306,6 +314,7 @@ class DrugSettingsFragment : Fragment() {
             if (selectedDays.contains(dayOfWeek)) {
                 times.forEach { time ->
                     val scheduleData = ScheduleData(
+                        medicationId = savedMedicationId!!,
                         medicationName = medicationName,
                         time = time,
                         description = commentInput.text.toString(),
@@ -326,6 +335,7 @@ class DrugSettingsFragment : Fragment() {
         val today = Calendar.getInstance()
         times.forEach { time ->
             val scheduleData = ScheduleData(
+                medicationId = savedMedicationId!!,
                 medicationName = medicationName,
                 time = time,
                 description = commentInput.text.toString(),

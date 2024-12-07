@@ -51,4 +51,11 @@ object ScheduleStorage {
         val json = gson.toJson(scheduleList)
         prefs.edit().putString(SCHEDULE_KEY, json).apply()
     }
+
+    fun deleteSchedulesForMedication(medicationId: String) {
+        val scheduleList = getAllSchedules().toMutableList()
+        scheduleList.removeAll { it.medicationId == medicationId }
+        val json = gson.toJson(scheduleList)
+        prefs.edit().putString(SCHEDULE_KEY, json).apply()
+    }
 }
