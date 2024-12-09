@@ -11,6 +11,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.example.mob_dev_course.MainActivity
 import com.example.mob_dev_course.R
+import com.example.mob_dev_course.fragments.NotificationsFragment
 import com.example.mob_dev_course.services.MedicationNotificationService
 import java.util.Calendar
 
@@ -59,6 +60,13 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Показываем уведомление
         notificationManager.notify(medicationId.hashCode(), notification)
+
+        // Добавляем уведомление в NotificationsFragment
+        NotificationsFragment.addNotification(
+            title = "Время принять лекарство",
+            text = "Не забудьте принять $medicationName",
+            medicationId = medicationId
+        )
 
         // Если это ежедневное уведомление, планируем следующее на завтра
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager

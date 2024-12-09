@@ -43,6 +43,22 @@
             android:layout_marginStart="8dp"
             android:layout_gravity="center_vertical" />
 
+        <TextView
+            android:id="@+id/notificationCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-12dp"
+            android:layout_marginTop="-8dp"
+            android:background="@drawable/notification_badge_background"
+            android:paddingStart="6dp"
+            android:paddingEnd="6dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            android:text="0"
+            android:visibility="gone"/>
+
         <Button
             android:id="@+id/add_button"
             android:layout_width="40dp"
