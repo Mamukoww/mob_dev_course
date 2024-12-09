@@ -27,14 +27,21 @@
                 android:src="@drawable/user_avatar"
                 android:contentDescription="Profile Image" />
 
+            <TextView
+                android:id="@+id/emailText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
             <Button
                 android:id="@+id/change_photo_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Изменить"
-                android:textSize="14sp"
-                android:backgroundTint="#D3D3D3" />
+                android:text="Изменить фото"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <EditText
@@ -75,27 +82,23 @@
                 android:layout_width="80dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="#E0E0E0"
                 android:text="М"
-                android:textSize="18sp"
-                android:textColor="#000000" />
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/female_button"
                 android:layout_width="80dp"
                 android:layout_height="48dp"
                 android:layout_margin="8dp"
-                android:background="#E0E0E0"
                 android:text="Ж"
-                android:textSize="18sp"
-                android:textColor="#000000" />
+                android:textSize="18sp" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/birth_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="ДД.ММ.ГГГГ"
+            android:hint="Дата рождения"
             android:padding="12dp"
             android:background="#E0E0E0"
             android:inputType="date"
@@ -103,13 +106,16 @@
 
         <Button
             android:id="@+id/save_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="#D3D3D3"
             android:text="Сохранить"
-            android:textColor="#000000"
-            android:padding="12dp"
-            android:layout_marginTop="16dp" />
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/logoutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Выйти из аккаунта" />
+
     </LinearLayout>
 </ScrollView>

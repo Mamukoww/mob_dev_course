@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "384396789213",
+    "project_id": "mob-dev-course-22e1f",
+    "storage_bucket": "mob-dev-course-22e1f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:384396789213:android:3edf1e0740153f8b67a234",
+        "android_client_info": {
+          "package_name": "com.example.mob_dev_course"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_amKE05WCto21F0sGDIEnwSJNfR8fW5k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
