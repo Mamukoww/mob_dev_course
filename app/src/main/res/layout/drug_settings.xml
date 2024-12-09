@@ -15,12 +15,14 @@
             android:text="Название медикамента"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/et_name"
+        <AutoCompleteTextView
+            android:id="@+id/nameInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:hint="Введите название" />
+            android:hint="Введите название препарата"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp"
+            android:completionThreshold="1" />
 
         <TextView
             android:layout_width="wrap_content"

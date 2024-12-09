@@ -16,12 +16,17 @@ import com.example.mob_dev_course.data.MedicationStorage
 import com.example.mob_dev_course.data.ScheduleData
 import com.example.mob_dev_course.data.ScheduleStorage
 import com.example.mob_dev_course.data.TimeSchedule
+import com.example.mob_dev_course.models.Drug
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.*
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 
 class DrugSettingsFragment : Fragment() {
-    private lateinit var nameInput: EditText
+    private lateinit var nameInput: AutoCompleteTextView
     private lateinit var commentInput: EditText
     private lateinit var typeSpinner: Spinner
     private lateinit var frequencySpinner: Spinner
@@ -38,6 +43,8 @@ class DrugSettingsFragment : Fragment() {
     private var endDate: Calendar? = null
     private val timeSchedules = mutableListOf<TimeSchedule>()
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    private val drugsList = mutableListOf<Drug>()
+    private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,32 +57,86 @@ class DrugSettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Инициализация views
+        initializeViews(view)
+
         // Инициализация ScheduleStorage
         context?.let { ScheduleStorage.initialize(it) }
 
-        initializeViews(view)
+        // Настройка автозаполнения
+        setupAutoComplete()
+        
         setupSpinners()
         setupDateButtons()
-        setupAddToScheduleButton()
+        setupFrequencySpinner()
+        setupTimesPerDaySpinner()
+        setupSaveButton()
+    }
 
-        // Обработчик изменения количества приемов
-        timesPerDaySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val times = (position + 1)
-                updateTimeButtons(times)
+    private fun setupAutoComplete() {
+        // Инициализация адаптера
+        adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            mutableListOf<String>()
+        )
+        nameInput.setAdapter(adapter)
+        nameInput.threshold = 1 // Начинать предлагать варианты после ввода первого символа
+
+        // Получение данных из Firebase
+        val database = FirebaseDatabase.getInstance()
+        val medicationsRef = database.getReference("medications")
+
+        medicationsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                drugsList.clear()
+                val names = mutableListOf<String>()
+                
+                for (drugSnapshot in snapshot.children) {
+                    val drug = drugSnapshot.getValue(Drug::class.java)
+                    drug?.let {
+                        drugsList.add(it)
+                        names.add(it.name)
+                    }
+                }
+                
+                adapter.clear()
+                adapter.addAll(names)
+                adapter.notifyDataSetChanged()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Ошибка загрузки данных: ${error.message}", 
+                    Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        // Обработка выбора препарата
+        nameInput.setOnItemClickListener { parent, _, position, _ ->
+            val selectedName = parent.getItemAtPosition(position) as String
+            // Убираем автозаполнение комментария
         }
 
-        // Обработчик кнопки сохранения
-        saveButton.setOnClickListener {
-            saveMedication()
-        }
+        // Добавляем TextWatcher для фильтрации в реальном времени
+        nameInput.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s?.toString()?.lowercase() ?: ""
+                val filteredList = drugsList
+                    .filter { it.name.lowercase().contains(query) }
+                    .map { it.name }
+                adapter.clear()
+                adapter.addAll(filteredList)
+                adapter.notifyDataSetChanged()
+            }
+            
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
     }
 
     private fun initializeViews(view: View) {
-        nameInput = view.findViewById(R.id.et_name)
+        nameInput = view.findViewById(R.id.nameInput)
         commentInput = view.findViewById(R.id.et_comment)
         typeSpinner = view.findViewById(R.id.spinner_type)
         frequencySpinner = view.findViewById(R.id.spinner_frequency)
@@ -87,38 +148,6 @@ class DrugSettingsFragment : Fragment() {
         dateRangeContainer = view.findViewById(R.id.date_range_container)
         startDateButton = view.findViewById(R.id.start_date_button)
         endDateButton = view.findViewById(R.id.end_date_button)
-    }
-
-    private fun setupDateButtons() {
-        startDateButton.setOnClickListener {
-            showDatePicker(true)
-        }
-
-        endDateButton.setOnClickListener {
-            showDatePicker(false)
-        }
-    }
-
-    private fun showDatePicker(isStartDate: Boolean) {
-        val calendar = Calendar.getInstance()
-        val datePickerDialog = DatePickerDialog(
-            requireContext(),
-            { _, year, month, dayOfMonth ->
-                val selectedCalendar = Calendar.getInstance()
-                selectedCalendar.set(year, month, dayOfMonth)
-                if (isStartDate) {
-                    startDate = selectedCalendar
-                    startDateButton.text = dateFormat.format(selectedCalendar.time)
-                } else {
-                    endDate = selectedCalendar
-                    endDateButton.text = dateFormat.format(selectedCalendar.time)
-                }
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-        datePickerDialog.show()
     }
 
     private fun setupSpinners() {
@@ -170,6 +199,81 @@ class DrugSettingsFragment : Fragment() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             timesPerDaySpinner.adapter = adapter
         }
+    }
+
+    private fun setupDateButtons() {
+        startDateButton.setOnClickListener {
+            showDatePicker(true)
+        }
+
+        endDateButton.setOnClickListener {
+            showDatePicker(false)
+        }
+    }
+
+    private fun setupFrequencySpinner() {
+        frequencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> { // Ежедневно
+                        daysSelectionContainer.visibility = View.GONE
+                        dateRangeContainer.visibility = View.VISIBLE
+                    }
+                    1 -> { // По дням недели
+                        daysSelectionContainer.visibility = View.VISIBLE
+                        dateRangeContainer.visibility = View.VISIBLE
+                    }
+                    2 -> { // Только сегодня
+                        daysSelectionContainer.visibility = View.GONE
+                        dateRangeContainer.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                daysSelectionContainer.visibility = View.GONE
+                dateRangeContainer.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setupTimesPerDaySpinner() {
+        timesPerDaySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val times = (position + 1)
+                updateTimeButtons(times)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun setupSaveButton() {
+        saveButton.setOnClickListener {
+            saveMedication()
+        }
+    }
+
+    private fun showDatePicker(isStartDate: Boolean) {
+        val calendar = Calendar.getInstance()
+        val datePickerDialog = DatePickerDialog(
+            requireContext(),
+            { _, year, month, dayOfMonth ->
+                val selectedCalendar = Calendar.getInstance()
+                selectedCalendar.set(year, month, dayOfMonth)
+                if (isStartDate) {
+                    startDate = selectedCalendar
+                    startDateButton.text = dateFormat.format(selectedCalendar.time)
+                } else {
+                    endDate = selectedCalendar
+                    endDateButton.text = dateFormat.format(selectedCalendar.time)
+                }
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
     }
 
     private fun updateTimeButtons(count: Int) {
@@ -237,136 +341,6 @@ class DrugSettingsFragment : Fragment() {
         MedicationStorage(requireContext()).saveMedication(medication)
         Toast.makeText(context, "Медикамент сохранен", Toast.LENGTH_SHORT).show()
         navigateToSchedule()
-    }
-
-    private fun setupAddToScheduleButton() {
-        addToScheduleButton.setOnClickListener {
-            val medicationName = nameInput.text.toString()
-            val frequency = frequencySpinner.selectedItem.toString()
-            val timesPerDay = (timesPerDaySpinner.selectedItem.toString()).toIntOrNull() ?: 1
-            val selectedTimes = getSelectedTimes()
-            
-            // Сначала сохраняем препарат в medications
-            saveMedication()
-            
-            // Затем добавляем в расписание
-            when (frequencySpinner.selectedItemPosition) {
-                0 -> { // Ежедневно
-                    addDailySchedule(medicationName, selectedTimes, frequency, timesPerDay)
-                }
-                1 -> { // По дням недели
-                    addWeeklySchedule(medicationName, selectedTimes, frequency, timesPerDay)
-                }
-                2 -> { // Только сегодня
-                    addTodaySchedule(medicationName, selectedTimes, frequency, timesPerDay)
-                }
-            }
-            
-            Toast.makeText(context, "Добавлено в расписание и сохранено", Toast.LENGTH_SHORT).show()
-            navigateToSchedule()
-        }
-    }
-
-    private fun addDailySchedule(medicationName: String, times: List<String>, frequency: String, timesPerDay: Int) {
-        if (startDate == null || endDate == null) {
-            Toast.makeText(context, "Выберите период приема", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val currentDate = startDate!!.clone() as Calendar
-        while (!currentDate.after(endDate)) {
-            times.forEach { time ->
-                val scheduleData = ScheduleData(
-                    medicationName = medicationName,
-                    time = time,
-                    description = commentInput.text.toString(),
-                    date = currentDate.timeInMillis,
-                    frequency = frequency,
-                    timesPerDay = timesPerDay,
-                    startDate = startDate?.timeInMillis,
-                    endDate = endDate?.timeInMillis
-                )
-                ScheduleStorage.saveSchedule(scheduleData)
-            }
-            currentDate.add(Calendar.DAY_OF_MONTH, 1)
-        }
-    }
-
-    private fun addWeeklySchedule(medicationName: String, times: List<String>, frequency: String, timesPerDay: Int) {
-        if (startDate == null || endDate == null) {
-            Toast.makeText(context, "Выберите период приема", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val selectedDays = getSelectedDays()
-        val currentDate = startDate!!.clone() as Calendar
-        
-        while (!currentDate.after(endDate)) {
-            val dayOfWeek = (currentDate.get(Calendar.DAY_OF_WEEK) + 5) % 7
-            if (selectedDays.contains(dayOfWeek)) {
-                times.forEach { time ->
-                    val scheduleData = ScheduleData(
-                        medicationName = medicationName,
-                        time = time,
-                        description = commentInput.text.toString(),
-                        date = currentDate.timeInMillis,
-                        frequency = frequency,
-                        timesPerDay = timesPerDay,
-                        startDate = startDate?.timeInMillis,
-                        endDate = endDate?.timeInMillis
-                    )
-                    ScheduleStorage.saveSchedule(scheduleData)
-                }
-            }
-            currentDate.add(Calendar.DAY_OF_MONTH, 1)
-        }
-    }
-
-    private fun addTodaySchedule(medicationName: String, times: List<String>, frequency: String, timesPerDay: Int) {
-        val today = Calendar.getInstance()
-        times.forEach { time ->
-            val scheduleData = ScheduleData(
-                medicationName = medicationName,
-                time = time,
-                description = commentInput.text.toString(),
-                date = today.timeInMillis,
-                frequency = frequency,
-                timesPerDay = timesPerDay
-            )
-            ScheduleStorage.saveSchedule(scheduleData)
-        }
-    }
-
-    private fun getSelectedDays(): List<Int> {
-        val selectedDays = mutableListOf<Int>()
-        val daysCheckboxes = listOf(
-            R.id.monday to 0,
-            R.id.tuesday to 1,
-            R.id.wednesday to 2,
-            R.id.thursday to 3,
-            R.id.friday to 4,
-            R.id.saturday to 5,
-            R.id.sunday to 6
-        )
-        
-        daysCheckboxes.forEach { (checkboxId, dayIndex) ->
-            if (view?.findViewById<CheckBox>(checkboxId)?.isChecked == true) {
-                selectedDays.add(dayIndex)
-            }
-        }
-        
-        return if (selectedDays.isEmpty()) listOf(0, 1, 2, 3, 4, 5, 6) else selectedDays
-    }
-
-    private fun getSelectedTimes(): List<String> {
-        // Получаем все выбранные времена из time_buttons_container
-        val timesList = mutableListOf<String>()
-        timeButtonsContainer.children.toList().forEach { view ->
-            if (view is Button) {
-                timesList.add(view.text.toString())
-            }
-        }
-        return timesList
     }
 
     private fun navigateToSchedule() {
