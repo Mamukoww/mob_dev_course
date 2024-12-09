@@ -113,16 +113,6 @@ class DrugSettingsFragment : Fragment() {
             }
         })
 
-        // Обработка выбора препарата
-        nameInput.setOnItemClickListener { parent, _, position, _ ->
-            val selectedName = parent.getItemAtPosition(position) as String
-            val selectedDrug = drugsList.find { it.name == selectedName }
-            selectedDrug?.let {
-                // Можно добавить логику для автозаполнения других полей
-                commentInput.setText(it.composition)
-            }
-        }
-
         // Добавляем TextWatcher для фильтрации в реальном времени
         nameInput.addTextChangedListener(object : android.text.TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

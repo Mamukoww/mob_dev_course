@@ -57,7 +57,7 @@ class SignUpActivity : AppCompatActivity() {
                         finish()
                     } else {
                         // Ошибка регистрации
-                        Toast.makeText(this, "Ошибка регистрации: ${task.exception?.localizedMessage}", 
+                        Toast.makeText(this, "Ошибка регистрации: ${task.exception?.localizedMessage}",
                             Toast.LENGTH_SHORT).show()
                         registerButton.isEnabled = true
                     }

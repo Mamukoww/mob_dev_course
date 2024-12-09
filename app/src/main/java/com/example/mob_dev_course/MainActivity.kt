@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import com.example.mob_dev_course.fragments.MainMenuFragment
 import com.example.mob_dev_course.fragments.PlannedFragment
 import com.example.mob_dev_course.fragments.Fragment3
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,9 +20,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var profileButton: Button
     private lateinit var notificationButton: Button
     private lateinit var addButton: Button
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Инициализация Firebase Auth
+        auth = Firebase.auth
+
+        // Проверяем авторизацию
+        if (auth.currentUser == null) {
+            // Если пользователь не авторизован, перенаправляем на экран приветствия
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
+            return
+        }
+
         setContentView(R.layout.activity_main)
 
         button1 = findViewById(R.id.bottom_button_1)

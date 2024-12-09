@@ -33,7 +33,7 @@ class WelcomeActivity : AppCompatActivity() {
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        val signUpButton = findViewById<Button>(R.id.signUpButton)
+        val signUpButton = findViewById<Button>(R.id.registerButton)
         signUpButton.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }

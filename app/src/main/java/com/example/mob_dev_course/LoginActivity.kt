@@ -51,7 +51,7 @@ class LoginActivity : AppCompatActivity() {
                         finish()
                     } else {
                         // Ошибка входа
-                        Toast.makeText(this, "Ошибка входа: ${task.exception?.localizedMessage}", 
+                        Toast.makeText(this, "Ошибка входа: ${task.exception?.localizedMessage}",
                             Toast.LENGTH_SHORT).show()
                         loginButton.isEnabled = true
                     }
