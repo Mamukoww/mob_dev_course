@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -44,22 +43,7 @@ class Profile : Fragment() {
         val view = inflater.inflate(R.layout.profile_settings, container, false)
         auth = Firebase.auth
 
-        // Отображаем email пользователя
-        val emailText = view.findViewById<TextView>(R.id.emailText)
-        emailText.text = auth.currentUser?.email ?: "Не авторизован"
-
-        // Добавляем кнопку выхода
-        val logoutButton = view.findViewById<Button>(R.id.logoutButton)
-        logoutButton.setOnClickListener {
-            auth.signOut()
-            // Перенаправляем на экран входа
-            startActivity(Intent(requireContext(), LoginActivity::class.java))
-            requireActivity().finish()
-        }
-
-        return view
-        val view = inflater.inflate(R.layout.profile_settings, container, false)
-
+        // Инициализация компонентов
         maleButton = view.findViewById(R.id.male_button)
         femaleButton = view.findViewById(R.id.female_button)
         saveButton = view.findViewById(R.id.save_button)
@@ -69,6 +53,17 @@ class Profile : Fragment() {
         lastNameInput = view.findViewById(R.id.last_name)
 
         profileStorage = ProfileStorage(requireContext())
+
+        // Отображаем email пользователя
+        val emailText = view.findViewById<TextView>(R.id.emailText)
+        emailText.text = auth.currentUser?.email ?: "Не авторизован"
+
+        // Настройка кнопки выхода
+        view.findViewById<Button>(R.id.logoutButton).setOnClickListener {
+            auth.signOut()
+            startActivity(Intent(requireContext(), LoginActivity::class.java))
+            requireActivity().finish()
+        }
 
         setupGenderButtons()
         setupSaveButton()

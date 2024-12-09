@@ -84,7 +84,6 @@
                 android:layout_margin="8dp"
                 android:background="@drawable/gender_button_selector"
                 android:text="М"
-                android:textSize="18sp" />
                 android:textSize="18sp"
                 android:textColor="@color/gender_text_selector" />
 
@@ -97,7 +96,6 @@
                 android:text="Ж"
                 android:textSize="18sp"
                 android:textColor="@color/gender_text_selector" />
-                android:textSize="18sp" />
         </LinearLayout>
 
         <EditText
@@ -117,19 +115,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Сохранить"
+            android:textSize="16sp"
+            android:backgroundTint="#673AB7"
+            android:textColor="#FFFFFF"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/logoutButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Выйти из аккаунта" />
-
-            android:textSize="16sp"
-            android:backgroundTint="#673AB7"
-            android:textColor="#FFFFFF"
-            android:padding="12dp"
-            android:layout_marginTop="16dp" />
+            android:text="Выйти из аккаунта"
+            android:layout_marginBottom="16dp" />
 
     </LinearLayout>
 </ScrollView>

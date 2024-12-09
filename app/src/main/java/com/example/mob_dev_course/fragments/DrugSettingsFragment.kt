@@ -16,12 +16,17 @@ import com.example.mob_dev_course.data.MedicationStorage
 import com.example.mob_dev_course.data.ScheduleData
 import com.example.mob_dev_course.data.ScheduleStorage
 import com.example.mob_dev_course.data.TimeSchedule
+import com.example.mob_dev_course.models.Drug
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import java.util.*
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 
 class DrugSettingsFragment : Fragment() {
-    private lateinit var nameInput: EditText
+    private lateinit var nameInput: AutoCompleteTextView
     private lateinit var commentInput: EditText
     private lateinit var typeSpinner: Spinner
     private lateinit var frequencySpinner: Spinner
@@ -39,6 +44,8 @@ class DrugSettingsFragment : Fragment() {
     private val timeSchedules = mutableListOf<TimeSchedule>()
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     private var savedMedicationId: String? = null
+    private val drugsList = mutableListOf<Drug>()
+    private lateinit var adapter: ArrayAdapter<String>
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,32 +58,96 @@ class DrugSettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Инициализация views
+        initializeViews(view)
+
         // Инициализация ScheduleStorage
         context?.let { ScheduleStorage.initialize(it) }
 
-        initializeViews(view)
+        // Настройка автозаполнения
+        setupAutoComplete()
+
         setupSpinners()
         setupDateButtons()
+        setupFrequencySpinner()
+        setupTimesPerDaySpinner()
+        setupSaveButton()
         setupAddToScheduleButton()
+    }
 
-        // Обработчик изменения количества приемов
-        timesPerDaySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                val times = (position + 1)
-                updateTimeButtons(times)
+    private fun setupAutoComplete() {
+        // Инициализация адаптера
+        adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            mutableListOf<String>()
+        )
+        nameInput.setAdapter(adapter)
+        nameInput.threshold = 1
+
+        // Получение данных из Firebase
+        val database = FirebaseDatabase.getInstance()
+        val medicationsRef = database.getReference("medications")
+
+        medicationsRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                drugsList.clear()
+                val names = mutableListOf<String>()
+
+                for (drugSnapshot in snapshot.children) {
+                    val drug = drugSnapshot.getValue(Drug::class.java)
+                    drug?.let {
+                        drugsList.add(it)
+                        names.add(it.name)
+                    }
+                }
+
+                adapter.clear()
+                adapter.addAll(names)
+                adapter.notifyDataSetChanged()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onCancelled(error: DatabaseError) {
+                Toast.makeText(context, "Ошибка загрузки данных: ${error.message}",
+                    Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        // Обработка выбора препарата
+        nameInput.setOnItemClickListener { parent, _, position, _ ->
+            val selectedName = parent.getItemAtPosition(position) as String
+            val selectedDrug = drugsList.find { it.name == selectedName }
+            selectedDrug?.let {
+                // Можно добавить логику для автозаполнения других полей
+                commentInput.setText(it.composition)
+            }
         }
 
-        // Обработчик кнопки сохранения
-        saveButton.setOnClickListener {
-            saveMedication()
-        }
+        // Добавляем TextWatcher для фильтрации в реальном времени
+        nameInput.addTextChangedListener(object : android.text.TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s?.toString()?.lowercase() ?: ""
+                if (query.isNotEmpty()) {
+                    val filteredList = drugsList
+                        .filter { it.name.lowercase().contains(query) }
+                        .map { it.name }
+                    adapter.clear()
+                    adapter.addAll(filteredList)
+                    adapter.notifyDataSetChanged()
+                    if (filteredList.isNotEmpty()) {
+                        nameInput.showDropDown()
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: android.text.Editable?) {}
+        })
     }
 
     private fun initializeViews(view: View) {
-        nameInput = view.findViewById(R.id.et_name)
+        nameInput = view.findViewById(R.id.nameInput)
         commentInput = view.findViewById(R.id.et_comment)
         typeSpinner = view.findViewById(R.id.spinner_type)
         frequencySpinner = view.findViewById(R.id.spinner_frequency)
@@ -173,6 +244,43 @@ class DrugSettingsFragment : Fragment() {
         }
     }
 
+    private fun setupFrequencySpinner() {
+        frequencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                when (position) {
+                    0 -> { // Ежедневно
+                        daysSelectionContainer.visibility = View.GONE
+                        dateRangeContainer.visibility = View.VISIBLE
+                    }
+                    1 -> { // По дням недели
+                        daysSelectionContainer.visibility = View.VISIBLE
+                        dateRangeContainer.visibility = View.VISIBLE
+                    }
+                    2 -> { // Только сегодня
+                        daysSelectionContainer.visibility = View.GONE
+                        dateRangeContainer.visibility = View.GONE
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                daysSelectionContainer.visibility = View.GONE
+                dateRangeContainer.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setupTimesPerDaySpinner() {
+        timesPerDaySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val times = (position + 1)
+                updateTimeButtons(times)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
     private fun updateTimeButtons(count: Int) {
         timeButtonsContainer.removeAllViews()
         timeSchedules.clear()
@@ -207,6 +315,12 @@ class DrugSettingsFragment : Fragment() {
     private fun updateButtonText(index: Int, hour: Int, minute: Int) {
         val button = timeButtonsContainer.getChildAt(index) as Button
         button.text = String.format("%02d:%02d", hour, minute)
+    }
+
+    private fun setupSaveButton() {
+        saveButton.setOnClickListener {
+            saveMedication()
+        }
     }
 
     private fun saveMedication() {
