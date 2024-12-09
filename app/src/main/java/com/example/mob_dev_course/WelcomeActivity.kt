@@ -28,19 +28,13 @@ class WelcomeActivity : AppCompatActivity() {
         // Если пользователь не авторизован, показываем экран приветствия
         setContentView(R.layout.welcome)
 
-        // Находим кнопки
         val loginButton = findViewById<Button>(R.id.loginButton)
-        val registerButton = findViewById<Button>(R.id.registerButton)
-
-        // Обработчик для кнопки входа
         loginButton.setOnClickListener {
-            // Переход к экрану входа
             startActivity(Intent(this, LoginActivity::class.java))
         }
 
-        // Обработчик для кнопки регистрации
-        registerButton.setOnClickListener {
-            // Переход к экрану регистрации
+        val signUpButton = findViewById<Button>(R.id.signUpButton)
+        signUpButton.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
     }
