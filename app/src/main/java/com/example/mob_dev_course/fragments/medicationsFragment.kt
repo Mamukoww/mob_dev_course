@@ -11,13 +11,12 @@ import com.example.mob_dev_course.R
 import com.example.mob_dev_course.adapters.MedicationsAdapter
 import com.example.mob_dev_course.adapters.MedicationItem
 import com.example.mob_dev_course.data.MedicationStorage
+import com.example.mob_dev_course.data.ScheduleStorage
 
 class Fragment3 : Fragment() {
 
     private lateinit var currentMedsRecyclerView: RecyclerView
-    private lateinit var inactiveMedsRecyclerView: RecyclerView
     private lateinit var currentMedsAdapter: MedicationsAdapter
-    private lateinit var inactiveMedsAdapter: MedicationsAdapter
     private lateinit var medicationStorage: MedicationStorage
 
     override fun onCreateView(
@@ -27,41 +26,40 @@ class Fragment3 : Fragment() {
         val view = inflater.inflate(R.layout.medications, container, false)
 
         medicationStorage = MedicationStorage(requireContext())
+        context?.let { ScheduleStorage.initialize(it) }
 
         // Найти RecyclerView
         currentMedsRecyclerView = view.findViewById(R.id.currentMedsRecyclerView)
-        inactiveMedsRecyclerView = view.findViewById(R.id.inactiveMedsRecyclerView)
 
-        // Инициализация адаптеров
-        currentMedsAdapter = MedicationsAdapter(emptyList(), childFragmentManager)
-        inactiveMedsAdapter = MedicationsAdapter(emptyList(), childFragmentManager)
+        // Инициализация адаптера
+        currentMedsAdapter = MedicationsAdapter(
+            emptyList(), 
+            childFragmentManager, 
+            medicationStorage,
+            ScheduleStorage // Передаем объект ScheduleStorage
+        )
 
-        // Установить адаптеры и менеджеры компоновки
+        // Установить адаптер и менеджер компоновки
         currentMedsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         currentMedsRecyclerView.adapter = currentMedsAdapter
-
-        inactiveMedsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        inactiveMedsRecyclerView.adapter = inactiveMedsAdapter
 
         return view
     }
 
     override fun onResume() {
         super.onResume()
-        updateMedicationLists()
+        updateMedicationList()
     }
 
-    private fun updateMedicationLists() {
+    private fun updateMedicationList() {
         // Получаем активные медикаменты
         val activeMeds = medicationStorage.getActiveMedications().map {
-            MedicationItem(it.name, "${it.comment}")
+            MedicationItem(
+                id = it.id,
+                name = it.name,
+                description = "${it.type}, ${it.comment}"
+            )
         }
         currentMedsAdapter.updateData(activeMeds)
-
-        // Получаем неактивные медикаменты
-        val inactiveMeds = medicationStorage.getInactiveMedications().map {
-            MedicationItem(it.name, "${it.comment}")
-        }
-        inactiveMedsAdapter.updateData(inactiveMeds)
     }
 }
