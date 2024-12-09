@@ -25,30 +25,28 @@ class TopMenuActivity : AppCompatActivity() {
             onBackPressed()
         }
 
-        val fragmentToOpen = intent.getStringExtra("fragment")
-
-        when (fragmentToOpen) {
-            "notifications" -> {
-                topMenuTitle.text = "Уведомления"
-                replaceFragment(NotificationsFragment())
-            }
-            "profile" -> {
-                topMenuTitle.text = "Профиль"
-                replaceFragment(Profile())
-            }
-            "detailed_plan" -> {
-                topMenuTitle.text = "Подробнее"
-                replaceFragment(DetailedPlan())
-            }
-            "drug_settings" -> {
-                topMenuTitle.text = "Настройки препарата"
-                replaceFragment(DrugSettingsFragment())
-            }
-            else -> {
-                topMenuTitle.text = "Профиль"
-                replaceFragment(Profile())
-            }
+        val fragmentType = intent.getStringExtra("fragment")
+        
+        // Устанавливаем заголовок в зависимости от типа фрагмента
+        topMenuTitle.text = when (fragmentType) {
+            "profile" -> "Профиль"
+            "notifications" -> "Уведомления"
+            "detailed_plan" -> "Лекарства"
+            "drug_settings" -> "Добавление лекарства"
+            else -> "Профиль"
         }
+        
+        val fragment = when (fragmentType) {
+            "profile" -> Profile()
+            "notifications" -> NotificationsFragment()
+            "detailed_plan" -> DetailedPlan()
+            "drug_settings" -> DrugSettingsFragment()
+            else -> Profile()
+        }
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.content_container, fragment)
+            .commit()
     }
 
     private fun replaceFragment(fragment: androidx.fragment.app.Fragment) {

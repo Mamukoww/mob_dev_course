@@ -17,6 +17,7 @@ import com.example.mob_dev_course.data.ScheduleData
 import com.example.mob_dev_course.data.ScheduleStorage
 import com.example.mob_dev_course.data.TimeSchedule
 import com.example.mob_dev_course.models.Drug
+import com.example.mob_dev_course.utils.NotificationScheduler
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
@@ -349,6 +350,39 @@ class DrugSettingsFragment : Fragment() {
         savedMedicationId = medication.id // Сохраняем ID лекарства
         medicationStorage.saveMedication(medication)
         Toast.makeText(context, "Медикамент сохранен", Toast.LENGTH_SHORT).show()
+
+        // Добавляем планирование уведомлений
+        val timesList = mutableListOf<Long>()
+        
+        // Получаем все выбранные времена
+        timeButtonsContainer.children.forEach { view ->
+            if (view is Button) {
+                val timeStr = view.text.toString()
+                if (timeStr.isNotEmpty()) {
+                    val timeParts = timeStr.split(":")
+                    if (timeParts.size == 2) {
+                        val calendar = Calendar.getInstance().apply {
+                            set(Calendar.HOUR_OF_DAY, timeParts[0].toInt())
+                            set(Calendar.MINUTE, timeParts[1].toInt())
+                            set(Calendar.SECOND, 0)
+                        }
+                        timesList.add(calendar.timeInMillis)
+                    }
+                }
+            }
+        }
+
+        // Планируем уведомления для каждого времени
+        timesList.forEach { time ->
+            NotificationScheduler.scheduleMedicationReminder(
+                requireContext(),
+                savedMedicationId!!,
+                nameInput.text.toString(),
+                time,
+                frequencySpinner.selectedItem.toString(),
+                timesPerDaySpinner.selectedItem.toString().toInt()
+            )
+        }
     }
 
     private fun setupAddToScheduleButton() {

@@ -57,4 +57,8 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
     // Glide для загрузки изображений
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Firebase Cloud Messaging
+    implementation("com.google.firebase:firebase-messaging-ktx")
+    // WorkManager для надежной работы с уведомлениями
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
 }
