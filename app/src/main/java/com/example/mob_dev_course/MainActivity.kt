@@ -129,11 +129,11 @@ class MainActivity : AppCompatActivity() {
             Glide.with(this)
                 .load(file)
                 .circleCrop()
-                .placeholder(R.drawable.user_avatar)
-                .error(R.drawable.user_avatar)
+                .placeholder(R.drawable.user_circle)
+                .error(R.drawable.user_circle)
                 .into(profileButton)
         } else {
-            profileButton.setImageResource(R.drawable.user_avatar)
+            profileButton.setImageResource(R.drawable.user_circle)
         }
     }
 
