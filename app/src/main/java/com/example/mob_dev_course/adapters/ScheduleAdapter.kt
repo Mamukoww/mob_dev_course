@@ -43,7 +43,7 @@ class ScheduleAdapter(
 
         fun updateStatus(status: MedicationStatus) {
             val iconResource = when (status) {
-                MedicationStatus.PENDING -> R.drawable.logo
+                MedicationStatus.PENDING -> R.drawable.logo2
                 MedicationStatus.TAKEN -> R.drawable.ic_check
                 MedicationStatus.SKIPPED -> R.drawable.ic_arrow_right
                 MedicationStatus.CANCELLED -> R.drawable.ic_close

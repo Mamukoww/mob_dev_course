@@ -3,7 +3,6 @@ package com.example.mob_dev_course
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,12 +19,13 @@ import com.google.firebase.ktx.Firebase
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var button1: Button
-    private lateinit var button2: Button
-    private lateinit var button3: Button
+
+    private lateinit var button1: ImageView
+    private lateinit var button2: ImageView
+    private lateinit var button3: ImageView
     private lateinit var profileButton: ImageView
-    private lateinit var notificationsButton: Button
-    private lateinit var addButton: Button
+    private lateinit var notificationsButton: ImageView
+    private lateinit var addButton: ImageView
     private lateinit var notificationCount: TextView
     private lateinit var usernameText: TextView
     private lateinit var auth: FirebaseAuth
@@ -58,9 +58,9 @@ class MainActivity : AppCompatActivity() {
         notificationCount = findViewById(R.id.notificationCount)
         usernameText = findViewById(R.id.username_text)
 
-        if (savedInstanceState == null) {
-            replaceFragment(MainMenuFragment())
-        }
+            if (savedInstanceState == null) {
+                replaceFragment(MainMenuFragment())
+            }
 
         setupButtons()
         updateProfileInfo()
@@ -73,17 +73,17 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        notificationsButton.setOnClickListener {
-            val intent = Intent(this, TopMenuActivity::class.java)
-            intent.putExtra("fragment", "notifications")
-            startActivity(intent)
-        }
+            notificationsButton.setOnClickListener {
+                val intent = Intent(this, TopMenuActivity::class.java)
+                intent.putExtra("fragment", "notifications")
+                startActivity(intent)
+            }
 
-        addButton.setOnClickListener {
-            val intent = Intent(this, TopMenuActivity::class.java)
-            intent.putExtra("fragment", "drug_settings")
-            startActivity(intent)
-        }
+            addButton.setOnClickListener {
+                val intent = Intent(this, TopMenuActivity::class.java)
+                intent.putExtra("fragment", "drug_settings")
+                startActivity(intent)
+            }
 
         button1.setOnClickListener { replaceFragment(MainMenuFragment()) }
         button2.setOnClickListener { replaceFragment(PlannedFragment()) }
@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
         // Обновляем фото профиля
         val fileName = "profile_${auth.currentUser?.uid}.jpg"
         val file = File(filesDir, fileName)
-        
+
         if (file.exists()) {
             Glide.with(this)
                 .load(file)

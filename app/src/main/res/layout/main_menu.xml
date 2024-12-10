@@ -4,80 +4,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="16dp">
+    android:padding="8dp"
+    android:background="#FFFFFF">
 
-    <GridLayout
+    <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:columnCount="2"
-        android:gravity="center"
-        android:rowCount="3">
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
 
-        <!-- Первая кнопка -->
-        <Button
-            android:id="@+id/menu_button_1"
-            android:layout_width="160dp"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:background="#D3D3D3"
-            android:text="Кнопка 1"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+        <!-- Первый ряд -->
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <!-- Вторая кнопка -->
-        <Button
-            android:id="@+id/menu_button_2"
-            android:layout_width="160dp"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:background="#D3D3D3"
-            android:text="Кнопка 2"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+            <!-- Первая кнопка -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu_button_1"
+                style="@style/MenuButton"
+                android:text="Настройки" />
 
-        <!-- Третья кнопка -->
-        <Button
-            android:id="@+id/menu_button_3"
-            android:layout_width="160dp"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:background="#D3D3D3"
-            android:text="Кнопка 3"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+            <!-- Вторая кнопка -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu_button_2"
+                style="@style/MenuButton"
+                android:text="Препараты" />
+        </TableRow>
 
-        <!-- Четвертая кнопка -->
-        <Button
-            android:id="@+id/menu_button_4"
-            android:layout_width="160dp"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:background="#D3D3D3"
-            android:text="Кнопка 4"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+        <!-- Второй ряд -->
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <!-- Пятая кнопка -->
-        <Button
-            android:id="@+id/menu_button_5"
-            android:layout_width="160dp"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:background="#D3D3D3"
-            android:text="Кнопка 5"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+            <!-- Третья кнопка -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu_button_3"
+                style="@style/MenuButton"
+                android:text="Аллергии" />
 
-        <!-- Шестая кнопка -->
-        <Button
-            android:id="@+id/menu_button_6"
-            android:layout_width="160dp"
-            android:layout_height="80dp"
-            android:layout_margin="16dp"
-            android:background="#D3D3D3"
-            android:text="Кнопка 6"
-            android:textColor="#000000"
-            android:textSize="16sp" />
+            <!-- Четвертая кнопка -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu_button_4"
+                style="@style/MenuButton"
+                android:text="Отчеты" />
 
-    </GridLayout>
+        </TableRow>
+
+        <!-- Третий ряд -->
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <!-- Пятая кнопка -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu_button_5"
+                style="@style/MenuButton"
+                android:text="История" />
+
+            <!-- Шестая кнопка -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu_button_6"
+                style="@style/MenuButton"
+                android:text="Пользователь" />
+        </TableRow>
+
+    </TableLayout>
 </LinearLayout>

@@ -5,64 +5,52 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    android:padding="16dp">
+    android:paddingTop="100dp"
+    android:paddingHorizontal="32dp"
+    android:paddingBottom="50dp">
 
     <!-- Логотип -->
     <ImageView
         android:id="@+id/logoImage"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/logo"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="32dp"
-        android:scaleType="centerInside" />
+        android:layout_marginBottom="30dp"/>
 
     <!-- Заголовок -->
     <TextView
         android:id="@+id/loginTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/AppTitle"
         android:text="Вход"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="32dp"
-        android:gravity="center" />
+        android:layout_marginBottom="30dp"/>
 
     <!-- Поле ввода для email -->
     <EditText
         android:id="@+id/usernameField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email"
+        style="@style/AppEditText"
+        android:hint="Логин"
         android:inputType="textEmailAddress"
-        android:layout_marginBottom="16dp"
-        android:layout_marginHorizontal="48dp" />
+        android:layout_marginBottom="30dp"/>
 
     <!-- Поле ввода для пароля -->
     <EditText
         android:id="@+id/passwordField"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/AppEditText"
         android:hint="Пароль"
         android:inputType="textPassword"
-        android:layout_marginBottom="32dp"
-        android:layout_marginHorizontal="48dp" />
+        android:layout_marginBottom="30dp"/>
 
     <!-- Кнопка "Вход" -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/AppButton"
         android:text="Войти"
-        android:layout_marginHorizontal="48dp"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginBottom="16dp"/>
 
     <!-- Кнопка "Регистрация" -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signUpButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Регистрация"
-        android:layout_marginHorizontal="48dp" />
+        style="@style/AppButton"
+        android:text="Регистрация"/>
 
 </LinearLayout>

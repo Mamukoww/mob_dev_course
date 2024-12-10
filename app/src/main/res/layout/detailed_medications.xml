@@ -1,68 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/medicineIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center"
-            android:src="@drawable/logo"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Название"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
-
-        <TextView
-            android:id="@+id/descriptionText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit"
-            android:textAlignment="center"
-            android:layout_marginBottom="16dp"/>
-
+        <!-- Карточка с информацией о лекарстве -->
         <LinearLayout
+            style="@style/DetailedMedicationCard"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
+            android:layout_height="wrap_content">
 
-            <Button
-                android:id="@+id/editButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Редактировать"
-                android:layout_marginEnd="8dp"/>
+            <!-- Иконка лекарства -->
+            <ImageView
+                android:id="@+id/medicationIcon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/logo2" />
 
-            <Button
-                android:id="@+id/deleteButton"
-                android:layout_width="0dp"
+            <!-- Название лекарства -->
+            <TextView
+                android:id="@+id/titleText"
+                style="@style/DetailedMedicationTitle"
+                android:text="Название" />
+
+            <!-- Описание лекарства -->
+            <TextView
+                android:id="@+id/descriptionText"
+                style="@style/DetailedMedicationDescription"
+                android:text="Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit" />
+
+            <!-- Горизонтальная линия -->
+            <View style="@style/MedicationDivider" />
+
+            <!-- Кнопки действий -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Удалить"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                android:orientation="horizontal">
+
+                <!-- Кнопка "Пополнить запас" -->
+                <TextView
+                    android:id="@+id/deleteButton"
+                    style="@style/MedicationActionButton"
+                    android:drawableTop="@drawable/ic_delete_action"
+                    android:text="Удалить" />
+
+                <!-- Кнопка "Изменить" -->
+                <TextView
+                    android:id="@+id/editButton"
+                    style="@style/MedicationActionButton"
+                    android:drawableTop="@drawable/ic_edit_action"
+                    android:text="Изменить" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</ScrollView>

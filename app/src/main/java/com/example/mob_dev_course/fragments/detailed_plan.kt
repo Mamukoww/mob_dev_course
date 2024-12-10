@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.mob_dev_course.R
@@ -50,17 +49,17 @@ class DetailedPlan : DialogFragment() {
         view.findViewById<TextView>(R.id.scheduledTimeText).text = "Запланировано на $time"
 
         // Настраиваем кнопки
-        view.findViewById<Button>(R.id.skipButton).setOnClickListener {
+        view.findViewById<TextView>(R.id.skipButton).setOnClickListener {
             listener?.onSkip()
             dismiss()
         }
 
-        view.findViewById<Button>(R.id.takeButton).setOnClickListener {
+        view.findViewById<TextView>(R.id.takeButton).setOnClickListener {
             listener?.onTake()
             dismiss()
         }
 
-        view.findViewById<Button>(R.id.cancelButton).setOnClickListener {
+        view.findViewById<TextView>(R.id.cancelButton).setOnClickListener {
             listener?.onCancel()
             dismiss()
         }

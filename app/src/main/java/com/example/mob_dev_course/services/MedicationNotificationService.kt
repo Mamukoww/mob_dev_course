@@ -43,7 +43,7 @@ class MedicationNotificationService : FirebaseMessagingService() {
 
         // Создаем уведомление
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.drawable.notification_mainmenu)
             .setContentTitle(message.data["title"] ?: "Время принять лекарство")
             .setContentText(message.data["body"] ?: "Не забудьте принять лекарство вовремя")
             .setPriority(NotificationCompat.PRIORITY_HIGH)

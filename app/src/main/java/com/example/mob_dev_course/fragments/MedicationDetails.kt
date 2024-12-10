@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.mob_dev_course.R
@@ -47,12 +46,12 @@ class MedicationDetailsDialog : DialogFragment() {
         view.findViewById<TextView>(R.id.descriptionText).text = description
 
         // Настраиваем кнопки
-        view.findViewById<Button>(R.id.editButton).setOnClickListener {
+        view.findViewById<TextView>(R.id.editButton).setOnClickListener {
             listener?.onEdit()
             dismiss()
         }
 
-        view.findViewById<Button>(R.id.deleteButton).setOnClickListener {
+        view.findViewById<TextView>(R.id.deleteButton).setOnClickListener {
             listener?.onDelete()
             dismiss()
         }

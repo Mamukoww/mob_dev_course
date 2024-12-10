@@ -1,86 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/medicineIcon"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center"
-            android:src="@drawable/logo"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/titleText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Название"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="4dp"/>
-
-        <TextView
-            android:id="@+id/descriptionText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit"
-            android:textAlignment="center"
-            android:layout_marginBottom="8dp"/>
-
-        <TextView
-            android:id="@+id/scheduledTimeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Запланировано на 11:11"
-            android:textSize="16sp"
-            android:layout_marginBottom="16dp"/>
-
+        <!-- Карточка с информацией о плане -->
         <LinearLayout
+            style="@style/DetailedPlanCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <Button
-                android:id="@+id/skipButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Пропустить"
-                android:layout_marginEnd="8dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            <!-- Иконка -->
+            <ImageView
+                android:id="@+id/medicineIcon"
+                style="@style/PlanIcon"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"
+                android:src="@drawable/logo" />
 
-            <Button
-                android:id="@+id/takeButton"
-                android:layout_width="0dp"
+            <!-- Название -->
+            <TextView
+                android:id="@+id/titleText"
+                style="@style/DetailedPlanTitle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Принять"
-                android:layout_marginEnd="8dp"/>
+                android:layout_gravity="center"
+                android:text="Название"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
 
-            <Button
-                android:id="@+id/cancelButton"
-                android:layout_width="0dp"
+            <!-- Описание -->
+            <TextView
+                android:id="@+id/descriptionText"
+                style="@style/DetailedPlanDescription"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Отменить"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                android:layout_gravity="center"
+                android:text="Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit"
+                android:textAlignment="center"
+                android:layout_marginBottom="8dp" />
+
+            <!-- Время -->
+            <TextView
+                android:id="@+id/scheduledTimeText"
+                style="@style/DetailedPlanDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Запланировано на 11:11"
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Горизонтальная линия -->
+            <View
+                style="@style/MedicationDivider"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Кнопки действий -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <!-- Кнопка "Пропустить" -->
+                <TextView
+                    android:id="@+id/skipButton"
+                    style="@style/PlanActionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_arrow_right"
+                    android:text="Пропустить" />
+
+                <!-- Кнопка "Принять" -->
+                <TextView
+                    android:id="@+id/takeButton"
+                    style="@style/PlanActionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_check"
+                    android:text="Принять" />
+
+                <!-- Кнопка "Отменить" -->
+                <TextView
+                    android:id="@+id/cancelButton"
+                    style="@style/PlanActionButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_close"
+                    android:text="Отменить" />
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</ScrollView>

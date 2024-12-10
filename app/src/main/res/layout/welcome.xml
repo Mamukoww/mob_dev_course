@@ -1,57 +1,58 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
-    android:padding="16dp">
+    android:gravity="center"
+    android:paddingTop="10dp"
+    android:paddingHorizontal="32dp"
+    android:paddingBottom="50dp">
 
-    <!-- ImageView для логотипа -->
     <ImageView
-        android:id="@+id/logoImage"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/logo"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="48dp"
-        android:scaleType="centerInside" />
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/logo" />
 
-    <!-- Название приложения -->
     <TextView
-        android:id="@+id/appTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Название приложения"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="24dp"
-        android:gravity="center" />
+        android:text="Pill"
+        android:textSize="48sp"
+        android:fontFamily="@font/oswald_bold"
+        android:textColor="#0C8499"
+        android:layout_marginBottom="30dp"/>
 
-    <!-- Описание -->
     <TextView
-        android:id="@+id/appDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-        android:textSize="14sp"
-        android:gravity="center"
-        android:layout_marginBottom="48dp" />
+        android:text="Пусть Pill заботится о вашем\nграфике, чтобы вы могли\nзаботиться о себе."
+        android:textAlignment="center"
+        android:textColor="#0C8499"
+        android:textSize="20sp"
+        android:fontFamily="@font/lato"
+        android:lineSpacingExtra="4dp"
+        android:layout_marginBottom="30dp"/>
 
-    <!-- Кнопка "Вход" -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
         android:text="Вход"
-        android:layout_marginBottom="24dp"
-        android:layout_marginHorizontal="48dp" />
+        android:textSize="20sp"
+        android:fontFamily="@font/oswald_bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_button"
+        android:layout_marginBottom="16dp"/>
 
-    <!-- Кнопка "Регистрация" -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registerButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
         android:text="Регистрация"
-        android:layout_marginHorizontal="48dp" />
+        android:textSize="20sp"
+        android:fontFamily="@font/oswald_bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_button"/>
 
 </LinearLayout>
