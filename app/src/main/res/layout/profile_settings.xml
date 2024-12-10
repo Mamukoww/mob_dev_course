@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="#F5F5F5"
     android:fillViewport="true">
 
     <LinearLayout
@@ -28,42 +28,30 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user_avatar" />
+                android:src="@drawable/user_avatar"
+                android:elevation="4dp" />
 
             <TextView
                 android:id="@+id/emailText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                style="@style/ProfileText"
+                android:layout_marginTop="8dp" />
 
             <Button
                 android:id="@+id/change_photo_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/ProfileButton"
                 android:layout_marginTop="8dp"
-                android:text="Изменить фото"
-                android:textSize="14sp" />
+                android:text="Изменить фото" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/first_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Имя"
-            android:padding="12dp"
-            android:background="#E0E0E0"
-            android:layout_marginBottom="8dp" />
+            style="@style/ProfileEditText"
+            android:hint="Имя" />
 
         <EditText
             android:id="@+id/last_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Фамилия"
-            android:padding="12dp"
-            android:background="#E0E0E0"
-            android:layout_marginBottom="8dp" />
+            style="@style/ProfileEditText"
+            android:hint="Фамилия" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,64 +61,45 @@
             android:layout_marginBottom="16dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/ProfileText"
                 android:text="Пол"
-                android:textSize="16sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginEnd="16dp" />
 
             <Button
                 android:id="@+id/male_button"
-                android:layout_width="80dp"
-                android:layout_height="48dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/gender_button_selector"
-                android:text="М"
-                android:textSize="18sp"
-                android:textColor="@color/gender_text_selector" />
+                style="@style/GenderButton"
+                android:text="М" />
 
             <Button
                 android:id="@+id/female_button"
-                android:layout_width="80dp"
-                android:layout_height="48dp"
-                android:layout_margin="8dp"
-                android:background="@drawable/gender_button_selector"
-                android:text="Ж"
-                android:textSize="18sp"
-                android:textColor="@color/gender_text_selector" />
+                style="@style/GenderButton"
+                android:text="Ж" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/birth_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            style="@style/ProfileEditText"
             android:hint="Дата рождения"
-            android:padding="12dp"
-            android:background="#E0E0E0"
             android:focusable="false"
             android:clickable="true"
-            android:inputType="none"
-            android:layout_marginBottom="16dp" />
+            android:inputType="none" />
 
         <Button
             android:id="@+id/save_button"
+            style="@style/ProfileButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:text="Сохранить"
-            android:textSize="16sp"
-            android:backgroundTint="#673AB7"
-            android:textColor="#FFFFFF"
-            android:padding="12dp"
+            android:backgroundTint="#0C8499"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp" />
 
         <Button
             android:id="@+id/logoutButton"
+            style="@style/ProfileButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Выйти из аккаунта"
-            android:layout_marginBottom="16dp" />
+            android:backgroundTint="#0C8499"
+            android:text="Выйти из аккаунта" />
 
     </LinearLayout>
 </ScrollView>

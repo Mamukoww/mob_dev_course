@@ -3,7 +3,7 @@ package com.example.mob_dev_course
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -17,12 +17,12 @@ import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var button1: Button
-    private lateinit var button2: Button
-    private lateinit var button3: Button
-    private lateinit var profileButton: Button
-    private lateinit var notificationsButton: Button
-    private lateinit var addButton: Button
+    private lateinit var button1: ImageView
+    private lateinit var button2: ImageView
+    private lateinit var button3: ImageView
+    private lateinit var profileButton: ImageView
+    private lateinit var notificationsButton: ImageView
+    private lateinit var addButton: ImageView
     private lateinit var notificationCount: TextView
     private lateinit var auth: FirebaseAuth
 
@@ -42,59 +42,66 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        button1 = findViewById(R.id.bottom_button_1)
-        button2 = findViewById(R.id.bottom_button_2)
-        button3 = findViewById(R.id.bottom_button_3)
-        profileButton = findViewById(R.id.profile_button)
-        notificationsButton = findViewById(R.id.notification_button)
-        addButton = findViewById(R.id.add_button)
-        notificationCount = findViewById(R.id.notificationCount)
+        try {
+            button1 = findViewById(R.id.bottom_button_1)
+            button2 = findViewById(R.id.bottom_button_2)
+            button3 = findViewById(R.id.bottom_button_3)
+            profileButton = findViewById(R.id.profile_button)
+            notificationsButton = findViewById(R.id.notification_button)
+            addButton = findViewById(R.id.add_button)
+            notificationCount = findViewById(R.id.notificationCount)
 
-        if (savedInstanceState == null) {
-            replaceFragment(MainMenuFragment())
-        }
+            if (savedInstanceState == null) {
+                replaceFragment(MainMenuFragment())
+            }
 
-        button1.setOnClickListener { replaceFragment(MainMenuFragment()) }
-        button2.setOnClickListener { replaceFragment(PlannedFragment()) }
-        button3.setOnClickListener { replaceFragment(Fragment3()) }
+            button1.setOnClickListener { replaceFragment(MainMenuFragment()) }
+            button2.setOnClickListener { replaceFragment(PlannedFragment()) }
+            button3.setOnClickListener { replaceFragment(Fragment3()) }
 
-        profileButton.setOnClickListener {
-            val intent = Intent(this, TopMenuActivity::class.java)
-            intent.putExtra("fragment", "profile")
-            startActivity(intent)
-        }
+            profileButton.setOnClickListener {
+                val intent = Intent(this, TopMenuActivity::class.java)
+                intent.putExtra("fragment", "profile")
+                startActivity(intent)
+            }
 
-        notificationsButton.setOnClickListener {
-            val intent = Intent(this, TopMenuActivity::class.java)
-            intent.putExtra("fragment", "notifications")
-            startActivity(intent)
-        }
+            notificationsButton.setOnClickListener {
+                val intent = Intent(this, TopMenuActivity::class.java)
+                intent.putExtra("fragment", "notifications")
+                startActivity(intent)
+            }
 
-        addButton.setOnClickListener {
-            val intent = Intent(this, TopMenuActivity::class.java)
-            intent.putExtra("fragment", "drug_settings")
-            startActivity(intent)
-        }
+            addButton.setOnClickListener {
+                val intent = Intent(this, TopMenuActivity::class.java)
+                intent.putExtra("fragment", "drug_settings")
+                startActivity(intent)
+            }
 
-        // Устанавливаем слушатель количества уведомлений
-        NotificationsFragment.setNotificationCountListener { count ->
-            runOnUiThread {
-                if (count > 0) {
-                    notificationCount.visibility = View.VISIBLE
-                    notificationCount.text = count.toString()
-                } else {
-                    notificationCount.visibility = View.GONE
+            // Устанавливаем слушатель количества уведомлений
+            NotificationsFragment.setNotificationCountListener { count ->
+                runOnUiThread {
+                    if (count > 0) {
+                        notificationCount.visibility = View.VISIBLE
+                        notificationCount.text = count.toString()
+                    } else {
+                        notificationCount.visibility = View.GONE
+                    }
                 }
             }
-        }
 
-        // Инициализируем начальное количество уведомлений
-        val initialCount = NotificationsFragment.getNotificationCount()
-        if (initialCount > 0) {
-            notificationCount.visibility = View.VISIBLE
-            notificationCount.text = initialCount.toString()
-        } else {
-            notificationCount.visibility = View.GONE
+            // Инициализируем начальное количество уведомлений
+            val initialCount = NotificationsFragment.getNotificationCount()
+            if (initialCount > 0) {
+                notificationCount.visibility = View.VISIBLE
+                notificationCount.text = initialCount.toString()
+            } else {
+                notificationCount.visibility = View.GONE
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Показываем ошибку пользователю и возвращаемся на экран входа
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
         }
     }
 

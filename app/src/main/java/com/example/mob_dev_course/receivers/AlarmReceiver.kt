@@ -49,7 +49,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
         // Создаем уведомление
         val notification = NotificationCompat.Builder(context, MedicationNotificationService.CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.drawable.notification_mainmenu)
             .setContentTitle("Время принять лекарство")
             .setContentText("Не забудьте принять $medicationName")
             .setAutoCancel(true)

@@ -3,32 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F5F5F5"
     android:padding="16dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notificationsRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
 
-    <TextView
-        android:id="@+id/emptyNotificationsText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="У вас пока нет уведомлений"
-        android:textAlignment="center"
-        android:visibility="gone"
-        android:layout_gravity="center"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notificationsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
+
+        <TextView
+            android:id="@+id/emptyNotificationsText"
+            style="@style/NotificationEmptyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="У вас пока нет уведомлений"
+            android:textAlignment="center"
+            android:visibility="gone"
+            android:textSize="16sp"/>
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/clearNotificationsButton"
+        style="@style/ProfileButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Очистить все"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#8692f7"
+        android:backgroundTint="#0C8499"
         android:textColor="#FFFFFF"/>
 
 </LinearLayout>
