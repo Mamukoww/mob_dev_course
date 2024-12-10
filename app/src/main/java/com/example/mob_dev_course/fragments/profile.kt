@@ -163,9 +163,25 @@ class Profile : Fragment() {
     private fun setupSaveButton() {
         saveButton.setOnClickListener {
             if (validateInputs()) {
-                saveProfileData()
-                Toast.makeText(context, "Профиль сохранен", Toast.LENGTH_SHORT).show()
+                saveProfile()
             }
+        }
+    }
+
+    private fun saveProfile() {
+        val profileData = ProfileData(
+            firstName = firstNameInput.text.toString(),
+            lastName = lastNameInput.text.toString(),
+            gender = if (maleButton.isSelected) "male" else "female",
+            birthDate = selectedDate?.timeInMillis
+        )
+
+        profileStorage.saveProfile(profileData)
+        Toast.makeText(context, "Профиль сохранен", Toast.LENGTH_SHORT).show()
+
+        // Возвращаемся в MainActivity для обновления UI
+        activity?.let { activity ->
+            activity.finish()
         }
     }
 
@@ -217,16 +233,6 @@ class Profile : Fragment() {
         return true
     }
 
-    private fun saveProfileData() {
-        val profile = ProfileData(
-            firstName = firstNameInput.text.toString(),
-            lastName = lastNameInput.text.toString(),
-            gender = if (maleButton.isSelected) "М" else if (femaleButton.isSelected) "Ж" else "",
-            birthDate = selectedDate?.timeInMillis
-        )
-        profileStorage.saveProfile(profile)
-    }
-
     private fun loadProfileData() {
         val profile = profileStorage.getProfile()
 
@@ -234,11 +240,11 @@ class Profile : Fragment() {
         lastNameInput.setText(profile.lastName)
 
         when (profile.gender) {
-            "М" -> {
+            "male" -> {
                 maleButton.isSelected = true
                 femaleButton.isSelected = false
             }
-            "Ж" -> {
+            "female" -> {
                 femaleButton.isSelected = true
                 maleButton.isSelected = false
             }
