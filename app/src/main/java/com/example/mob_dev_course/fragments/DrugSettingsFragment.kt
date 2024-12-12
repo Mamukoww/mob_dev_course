@@ -321,21 +321,15 @@ class DrugSettingsFragment : Fragment() {
     }
 
     private fun saveMedication() {
-        val name = nameInput.text.toString()
+        val name = nameInput.text.toString().trim()
         val type = typeSpinner.selectedItem.toString()
-        val comment = commentInput.text.toString()
+        val comment = commentInput.text.toString().trim()
         val frequency = frequencySpinner.selectedItem.toString()
         val timesPerDay = (timesPerDaySpinner.selectedItem.toString()).toIntOrNull() ?: 1
 
+        // Проверки
         if (name.isBlank()) {
             Toast.makeText(context, "Введите название медикамента", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Проверяем, существует ли уже препарат с таким названием
-        val medicationStorage = MedicationStorage(requireContext())
-        if (medicationStorage.getMedicationByName(name) != null) {
-            Toast.makeText(context, "Препарат с таким названием уже существует", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -344,50 +338,72 @@ class DrugSettingsFragment : Fragment() {
             return
         }
 
-        val medication = Medication(
-            name = name,
-            type = type,
-            comment = comment,
-            frequency = frequency,
-            timesPerDay = timesPerDay,
-            schedules = timeSchedules.toList()
-        )
-
-        savedMedicationId = medication.id // Сохраняем ID лекарства
-        medicationStorage.saveMedication(medication)
-        Toast.makeText(context, "Медикамент сохранен", Toast.LENGTH_SHORT).show()
-
-        // Добавляем планирование уведомлений
-        val timesList = mutableListOf<Long>()
-        
-        // Получаем все выбранные времена
-        timeButtonsContainer.children.forEach { view ->
-            if (view is Button) {
-                val timeStr = view.text.toString()
-                if (timeStr.isNotEmpty()) {
-                    val timeParts = timeStr.split(":")
-                    if (timeParts.size == 2) {
-                        val calendar = Calendar.getInstance().apply {
-                            set(Calendar.HOUR_OF_DAY, timeParts[0].toInt())
-                            set(Calendar.MINUTE, timeParts[1].toInt())
-                            set(Calendar.SECOND, 0)
-                        }
-                        timesList.add(calendar.timeInMillis)
-                    }
-                }
+        // Проверка дат для ежедневного приема и приема по дням недели
+        if (frequency != "Только сегодня" && dateRangeContainer.visibility == View.VISIBLE) {
+            if (startDate == null || endDate == null) {
+                Toast.makeText(context, "Пожалуйста, укажите период приема", Toast.LENGTH_SHORT).show()
+                return
+            }
+            if (endDate?.before(startDate) == true) {
+                Toast.makeText(context, "Дата окончания не может быть раньше даты начала", Toast.LENGTH_SHORT).show()
+                return
             }
         }
 
-        // Планируем уведомления для каждого времени
-        timesList.forEach { time ->
-            NotificationScheduler.scheduleMedicationReminder(
-                requireContext(),
-                savedMedicationId!!,
-                nameInput.text.toString(),
-                time,
-                frequencySpinner.selectedItem.toString(),
-                timesPerDaySpinner.selectedItem.toString().toInt()
+        // Проверка выбранных дней недели для еженедельного приема
+        if (frequency == "По дням недели" && daysSelectionContainer.visibility == View.VISIBLE) {
+            val selectedDays = getSelectedDays()
+            if (selectedDays.isEmpty()) {
+                Toast.makeText(context, "Пожалуйста, выберите дни приема", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        try {
+            val medication = Medication(
+                name = name,
+                type = type,
+                comment = comment,
+                frequency = frequency,
+                timesPerDay = timesPerDay,
+                schedules = timeSchedules.toList()
             )
+
+            val medicationStorage = MedicationStorage(requireContext())
+            medicationStorage.saveMedication(medication)
+            savedMedicationId = medication.id
+
+            // Планирование уведомлений
+            val notificationScheduler = NotificationScheduler
+            timeSchedules.forEach { schedule ->
+                val calendar = Calendar.getInstance().apply {
+                    set(Calendar.HOUR_OF_DAY, schedule.hour)
+                    set(Calendar.MINUTE, schedule.minute)
+                    set(Calendar.SECOND, 0)
+                }
+                notificationScheduler.scheduleMedicationReminder(
+                    requireContext(),
+                    medication.id,
+                    name,
+                    calendar.timeInMillis,
+                    frequency,
+                    timesPerDay
+                )
+            }
+
+            Toast.makeText(context, "Медикамент успешно сохранен", Toast.LENGTH_SHORT).show()
+            // Очищаем поля после сохранения
+            nameInput.text.clear()
+            commentInput.text.clear()
+            timeSchedules.clear()
+            timeButtonsContainer.removeAllViews()
+            startDate = null
+            endDate = null
+            startDateButton.text = "Дата начала"
+            endDateButton.text = "Дата окончания"
+            
+        } catch (e: Exception) {
+            Toast.makeText(context, "Ошибка при сохранении: ${e.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
