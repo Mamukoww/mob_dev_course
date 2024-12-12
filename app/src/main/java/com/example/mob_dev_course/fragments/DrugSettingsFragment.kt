@@ -186,21 +186,19 @@ class DrugSettingsFragment : Fragment() {
 
     private fun setupSpinners() {
         // Типы медикаментов
-        ArrayAdapter.createFromResource(
+        val typeAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.medication_types,
-            android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            typeSpinner.adapter = adapter
-        }
+            R.layout.spinner_dropdown_item
+        )
+        typeAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        typeSpinner.adapter = typeAdapter
 
         // Настройка спиннера частоты приема
         val frequencyOptions = arrayOf("Ежедневно", "По дням недели", "Только сегодня")
-        ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, frequencyOptions).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            frequencySpinner.adapter = adapter
-        }
+        val frequencyAdapter = ArrayAdapter(requireContext(), R.layout.spinner_dropdown_item, frequencyOptions)
+        frequencyAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        frequencySpinner.adapter = frequencyAdapter
 
         // Обработчик выбора частоты
         frequencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -221,18 +219,14 @@ class DrugSettingsFragment : Fragment() {
                 }
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                daysSelectionContainer.visibility = View.GONE
-                dateRangeContainer.visibility = View.GONE
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
         // Настройка спиннера количества приемов в день
         val timesPerDayOptions = (1..5).map { it.toString() }.toTypedArray()
-        ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timesPerDayOptions).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            timesPerDaySpinner.adapter = adapter
-        }
+        val timesPerDayAdapter = ArrayAdapter(requireContext(), R.layout.spinner_dropdown_item, timesPerDayOptions)
+        timesPerDayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+        timesPerDaySpinner.adapter = timesPerDayAdapter
     }
 
     private fun setupFrequencySpinner() {
@@ -277,14 +271,31 @@ class DrugSettingsFragment : Fragment() {
         timeSchedules.clear()
 
         for (i in 1..count) {
-            val button = Button(context).apply {
+            val button = androidx.appcompat.widget.AppCompatButton(requireContext()).apply {
                 text = "Выбрать время приема $i"
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    height = resources.getDimensionPixelSize(R.dimen.button_height)
+                    bottomMargin = 16
+                }
+                textSize = 20f
+                setTextColor(resources.getColor(R.color.white))
+                background = resources.getDrawable(R.drawable.rounded_button)
                 setOnClickListener {
                     showTimePickerDialog(i - 1)
                 }
             }
             timeButtonsContainer.addView(button)
         }
+    }
+
+    private fun updateButtonText(index: Int, hour: Int, minute: Int) {
+        val button = timeButtonsContainer.getChildAt(index) as Button
+        val formattedHour = String.format("%02d", hour)
+        val formattedMinute = String.format("%02d", minute)
+        button.text = "Время приема $formattedHour:$formattedMinute"
     }
 
     private fun showTimePickerDialog(index: Int) {
@@ -301,11 +312,6 @@ class DrugSettingsFragment : Fragment() {
             }
         }
         timePickerFragment.show(childFragmentManager, "timePicker")
-    }
-
-    private fun updateButtonText(index: Int, hour: Int, minute: Int) {
-        val button = timeButtonsContainer.getChildAt(index) as Button
-        button.text = String.format("%02d:%02d", hour, minute)
     }
 
     private fun setupSaveButton() {
