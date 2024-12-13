@@ -49,11 +49,10 @@ class ScheduleAdapter(
                 MedicationStatus.CANCELLED -> R.drawable.ic_close
             }
             statusIcon.setImageResource(iconResource)
-            // Убираем tint для logo
             if (status == MedicationStatus.PENDING) {
                 statusIcon.clearColorFilter()
             } else {
-                statusIcon.setColorFilter(Color.BLACK)
+                statusIcon.setColorFilter(Color.WHITE)
             }
         }
     }

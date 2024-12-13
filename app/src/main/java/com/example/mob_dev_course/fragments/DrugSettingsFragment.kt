@@ -189,48 +189,23 @@ class DrugSettingsFragment : Fragment() {
         ArrayAdapter.createFromResource(
             requireContext(),
             R.array.medication_types,
-            android.R.layout.simple_spinner_item
+            R.layout.spinner_item
         ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
             typeSpinner.adapter = adapter
         }
 
         // Настройка спиннера частоты приема
         val frequencyOptions = arrayOf("Ежедневно", "По дням недели", "Только сегодня")
-        ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, frequencyOptions).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        ArrayAdapter(requireContext(), R.layout.spinner_item, frequencyOptions).also { adapter ->
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
             frequencySpinner.adapter = adapter
-        }
-
-        // Обработчик выбора частоты
-        frequencySpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                when (position) {
-                    0 -> { // Ежедневно
-                        daysSelectionContainer.visibility = View.GONE
-                        dateRangeContainer.visibility = View.VISIBLE
-                    }
-                    1 -> { // По дням недели
-                        daysSelectionContainer.visibility = View.VISIBLE
-                        dateRangeContainer.visibility = View.VISIBLE
-                    }
-                    2 -> { // Только сегодня
-                        daysSelectionContainer.visibility = View.GONE
-                        dateRangeContainer.visibility = View.GONE
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                daysSelectionContainer.visibility = View.GONE
-                dateRangeContainer.visibility = View.GONE
-            }
         }
 
         // Настройка спиннера количества приемов в день
         val timesPerDayOptions = (1..5).map { it.toString() }.toTypedArray()
-        ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, timesPerDayOptions).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        ArrayAdapter(requireContext(), R.layout.spinner_item, timesPerDayOptions).also { adapter ->
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
             timesPerDaySpinner.adapter = adapter
         }
     }
@@ -277,7 +252,7 @@ class DrugSettingsFragment : Fragment() {
         timeSchedules.clear()
 
         for (i in 1..count) {
-            val button = Button(context).apply {
+            val button = Button(context, null, 0, R.style.TimePickerButton).apply {
                 text = "Выбрать время приема $i"
                 setOnClickListener {
                     showTimePickerDialog(i - 1)

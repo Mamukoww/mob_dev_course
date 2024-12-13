@@ -17,14 +17,12 @@
 
         <AutoCompleteTextView
             android:id="@+id/nameInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="16dp"
+            style="@style/AppEditText"
             android:hint="Название препарата"
             android:completionThreshold="1"
             android:inputType="text"
-            android:imeOptions="actionNext" />
+            android:imeOptions="actionNext"
+            android:layout_marginBottom="30dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -34,9 +32,12 @@
 
         <Spinner
             android:id="@+id/spinner_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+            style="@style/AppEditText"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/input_background"
+            android:popupBackground="@drawable/input_background"
+            android:spinnerMode="dropdown"
+            android:textColor="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -46,12 +47,10 @@
 
         <EditText
             android:id="@+id/et_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            style="@style/AppEditText"
             android:hint="Добавьте комментарий"
-            android:inputType="textMultiLine"
-            android:lines="3" />
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="30dp"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,9 +60,12 @@
 
         <Spinner
             android:id="@+id/spinner_frequency"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+            style="@style/AppEditText"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/input_background"
+            android:popupBackground="@drawable/input_background"
+            android:spinnerMode="dropdown"
+            android:textColor="#FFFFFF" />
 
         <LinearLayout
             android:id="@+id/days_selection_container"
@@ -86,54 +88,131 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
 
-                <CheckBox
-                    android:id="@+id/monday"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Пн" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/monday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/WeekdayCheckbox" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Пн"
+                        style="@style/WeekdayText" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/tuesday"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Вт" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/tuesday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/WeekdayCheckbox" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Вт"
+                        style="@style/WeekdayText" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/wednesday"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Ср" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/wednesday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/WeekdayCheckbox" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ср"
+                        style="@style/WeekdayText" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/thursday"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Чт" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/thursday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/WeekdayCheckbox" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Чт"
+                        style="@style/WeekdayText" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/friday"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Пт" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/friday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/WeekdayCheckbox" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Пт"
+                        style="@style/WeekdayText" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/saturday"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Сб" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/saturday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/WeekdayCheckbox" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Сб"
+                        style="@style/WeekdayText" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/sunday"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Вс" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <CheckBox
+                        android:id="@+id/sunday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/WeekdayCheckbox" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Вс"
+                        style="@style/WeekdayText" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -157,20 +236,28 @@
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp">
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/start_date_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="Дата начала"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/oswald_bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rounded_button"
                     android:layout_marginEnd="8dp" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/end_date_button"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="Дата окончания"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/oswald_bold"
+                    android:textColor="#FFFFFF"
+                    android:background="@drawable/rounded_button"
                     android:layout_marginStart="8dp" />
             </LinearLayout>
         </LinearLayout>
@@ -183,9 +270,12 @@
 
         <Spinner
             android:id="@+id/spinner_times_per_day"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+            style="@style/AppEditText"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/input_background"
+            android:popupBackground="@drawable/input_background"
+            android:spinnerMode="dropdown"
+            android:textColor="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -200,18 +290,29 @@
             android:orientation="vertical"
             android:layout_marginBottom="16dp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Сохранить" />
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:text="Сохранить"
+            android:textSize="20sp"
+            android:fontFamily="@font/oswald_bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/rounded_button"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center_horizontal"/>
 
-        <!-- Кнопка "Добавить в расписание" -->
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_add_to_schedule"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Добавить в расписание" />
+            android:layout_width="200dp"
+            android:layout_height="48dp"
+            android:text="Добавить"
+            android:textSize="20sp"
+            android:fontFamily="@font/oswald_bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/rounded_button"
+            android:layout_marginBottom="16dp"
+            android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
 </ScrollView>

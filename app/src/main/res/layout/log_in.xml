@@ -40,17 +40,26 @@
         android:inputType="textPassword"
         android:layout_marginBottom="30dp"/>
 
-    <!-- Кнопка "Вход" -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
-        style="@style/AppButton"
+        android:layout_width="200dp"
+        android:layout_height="48dp"
         android:text="Войти"
+        android:textSize="20sp"
+        android:fontFamily="@font/oswald_bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_button"
         android:layout_marginBottom="16dp"/>
 
-    <!-- Кнопка "Регистрация" -->
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/signUpButton"
-        style="@style/AppButton"
-        android:text="Регистрация"/>
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:text="Регистрация"
+        android:textSize="20sp"
+        android:fontFamily="@font/oswald_bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_button"
+        android:layout_marginBottom="16dp"/>
 
 </LinearLayout>
