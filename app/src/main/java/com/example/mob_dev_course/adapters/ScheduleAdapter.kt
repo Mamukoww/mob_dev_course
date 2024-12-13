@@ -21,6 +21,7 @@ data class ScheduleItem(
     var status: MedicationStatus
 )
 
+
 class ScheduleAdapter(
     private var data: List<ScheduleItem>,
     private val fragmentManager: FragmentManager
